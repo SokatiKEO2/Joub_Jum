@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/pages/home.dart';
+import 'package:joub_jum/pages/map_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: Home(),
+      home: MapPage(),
     );
   }
 }
