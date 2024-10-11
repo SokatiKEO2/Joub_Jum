@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_maps_flutter: ^2.9.0
   location: ^5.0.0
+  flutter_polyline_points: ^2.1.0
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -61,8 +63,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/icons/
+    - assets/icons/3bars_icon.svg
+    - assets/icons/search_icon.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,7 +1,9 @@
 import 'dart:async';
-
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:joub_jum/consts.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
@@ -17,20 +19,28 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
+
   static const LatLng _pGooglePlex = LatLng(11.5564, 104.9282);
   static const LatLng _testLocation = LatLng(11.50, 104.88);
   LatLng? _currentP;
+  bool _isSearching = false;
+
+  Map<PolylineId, Polyline> polylines = {};
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getLocationUpdate();
+    getLocationUpdate().then((_) => {
+          getPolylinePoints()
+              .then((coordinate) => {generatePolylineFromPoints(coordinate)})
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(),
       body: _currentP == null
           ? const Center(
               child: Text("Loading..."),
@@ -42,6 +52,7 @@ class _MapPageState extends State<MapPage> {
               initialCameraPosition:
                   const CameraPosition(target: _pGooglePlex, zoom: 13),
               markers: {
+                //Current location of user
                 Marker(
                     markerId: const MarkerId("_currentLocation"),
                     icon: BitmapDescriptor.defaultMarker,
@@ -55,7 +66,60 @@ class _MapPageState extends State<MapPage> {
                     icon: BitmapDescriptor.defaultMarker,
                     position: _testLocation)
               },
+              polylines: Set<Polyline>.of(polylines.values),
             ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      title: _isSearching
+          ? const TextField(
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          border: InputBorder.none,
+          hintStyle: TextStyle(color: Colors.black),
+        ),
+        style: TextStyle(color: Colors.black, fontSize: 18.0),
+        autofocus: true,
+      )
+          : const Text('', style: TextStyle(color: Colors.black, fontSize: 18)),
+      centerTitle: true,
+      backgroundColor: Colors.white,
+      leading: Container(
+        margin: const EdgeInsets.all(10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: const Color(0xFFE5E4E2),
+            borderRadius: BorderRadius.circular(10)),
+        child: SvgPicture.asset(
+          'assets/icons/3bars_icon.svg',
+          width: 24,
+          height: 24,
+        ),
+      ),
+      actions: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isSearching = !_isSearching;
+            });
+          },
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            alignment: Alignment.center,
+            width: 37,
+            decoration: BoxDecoration(
+                color: const Color(0xFFE5E4E2),
+                borderRadius: BorderRadius.circular(10)),
+            child: SvgPicture.asset(
+              'assets/icons/search_icon.svg',
+              width: 24,
+              height: 24,
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -96,6 +160,38 @@ class _MapPageState extends State<MapPage> {
         });
         _cameraToPosition(_currentP!);
       }
+    });
+  }
+
+  Future<List<LatLng>> getPolylinePoints() async {
+    List<LatLng> polylineCoordinate = [];
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        googleApiKey: GOOGLE_MAP_API_KEY,
+        request: PolylineRequest(
+            origin: PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
+            destination:
+                PointLatLng(_testLocation.latitude, _testLocation.longitude),
+            mode: TravelMode.driving));
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinate.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+    return polylineCoordinate;
+  }
+
+  void generatePolylineFromPoints(List<LatLng> polylineCoordinate) async {
+    PolylineId id = const PolylineId("poly");
+    Polyline polyline = Polyline(
+        polylineId: id,
+        color: Colors.blue,
+        points: polylineCoordinate,
+        width: 8);
+    setState(() {
+      polylines[id] = polyline;
     });
   }
 }
