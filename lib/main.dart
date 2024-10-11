@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:joub_jum/pages/home.dart';
-import 'package:joub_jum/pages/map_page.dart';
+import 'package:joub_jum/pages/Username.dart';
+import 'package:joub_jum/pages/login_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -12,11 +12,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Starter Template',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
-      home: const MapPage(),
+      home: LoginPage(),
     );
   }
 }
