@@ -5,6 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:location/location.dart';
+import 'package:joub_jum/pages/search_page.dart';
+import 'package:joub_jum/pages/menu_bar_pages/account.dart';
+import 'package:joub_jum/pages/menu_bar_pages/friend.dart';
+import 'package:joub_jum/pages/menu_bar_pages/invitation.dart';
+import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
+import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
+
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -19,11 +26,9 @@ class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
-
   static const LatLng _pGooglePlex = LatLng(11.5564, 104.9282);
   static const LatLng _testLocation = LatLng(11.50, 104.88);
   LatLng? _currentP;
-  bool _isSearching = false;
 
   Map<PolylineId, Polyline> polylines = {};
 
@@ -40,7 +45,14 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: appBar(),
+      drawer: Container(
+        width: 250,
+        height: 350,
+        child: buildDrawer()
+
+      ),
       body: _currentP == null
           ? const Center(
               child: Text("Loading..."),
@@ -71,39 +83,82 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+  Drawer buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: const EdgeInsets.all(25),
+        children: [
+          ListTile(
+            title: const Text('Account'),
+            onTap: () {
+              _navigateToNextScreen(context, const AccountPage());
+            },
+          ),
+          ListTile(
+            title: const Text('Recommendation'),
+            onTap: () {
+              _navigateToNextScreen(context, const RecommendationPage());
+            },
+          ),
+          ListTile(
+            title: const Text('Invitation'),
+            onTap: () {
+              _navigateToNextScreen(context, const InvitationPage());
+            },
+          ),
+          ListTile(
+            title: const Text('Joub Jum'),
+            onTap: () {
+              _navigateToNextScreen(context, const JoubJumPage());
+            },
+          ),
+          ListTile(
+            title: const Text('Friend'),
+            onTap: () {
+              _navigateToNextScreen(context, const FriendPage());
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   AppBar appBar() {
     return AppBar(
-      title: _isSearching
-          ? const TextField(
-        decoration: InputDecoration(
-          hintText: 'Search...',
-          border: InputBorder.none,
-          hintStyle: TextStyle(color: Colors.black),
-        ),
-        style: TextStyle(color: Colors.black, fontSize: 18.0),
-        autofocus: true,
-      )
-          : const Text('', style: TextStyle(color: Colors.black, fontSize: 18)),
-      centerTitle: true,
-      backgroundColor: Colors.white,
-      leading: Container(
-        margin: const EdgeInsets.all(10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            color: const Color(0xFFE5E4E2),
-            borderRadius: BorderRadius.circular(10)),
-        child: SvgPicture.asset(
-          'assets/icons/3bars_icon.svg',
-          width: 24,
-          height: 24,
-        ),
+      backgroundColor: const Color(0x20000000),
+      elevation: 0,
+      title: const Text(
+        'Location',
+        style: TextStyle(color: Colors.black, fontSize: 18),
       ),
+      centerTitle: true,
+      leading: Builder(
+        builder: (BuildContext context) {
+          return GestureDetector(
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+            },
+            child: Container(
+              margin: const EdgeInsets.all(10),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E4E2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SvgPicture.asset(
+                'assets/icons/3bars_icon.svg',
+                width: 24,
+                height: 24,
+              ),
+            ),
+          );
+        },
+      ),
+
       actions: [
         GestureDetector(
           onTap: () {
-            setState(() {
-              _isSearching = !_isSearching;
-            });
+            _navigateToNextScreen(context, const SearchPage());
           },
           child: Container(
             margin: const EdgeInsets.all(10),
@@ -121,6 +176,11 @@ class _MapPageState extends State<MapPage> {
         )
       ],
     );
+  }
+
+  void _navigateToNextScreen(BuildContext context, Widget targetPage) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => targetPage));
   }
 
   Future<void> _cameraToPosition(LatLng pos) async {
