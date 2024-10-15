@@ -85,37 +85,38 @@ class _MapPageState extends State<MapPage> {
 
   Drawer buildDrawer() {
     return Drawer(
+      backgroundColor: menuBarColor,
       child: ListView(
         padding: const EdgeInsets.all(25),
         children: [
           ListTile(
             title: const Text('Account'),
             onTap: () {
-              _navigateToNextScreen(context, const AccountPage());
+              navigateToNextScreen(context, const AccountPage());
             },
           ),
           ListTile(
             title: const Text('Recommendation'),
             onTap: () {
-              _navigateToNextScreen(context, const RecommendationPage());
+              navigateToNextScreen(context, const RecommendationPage());
             },
           ),
           ListTile(
             title: const Text('Invitation'),
             onTap: () {
-              _navigateToNextScreen(context, const InvitationPage());
+              navigateToNextScreen(context, const InvitationPage());
             },
           ),
           ListTile(
             title: const Text('Joub Jum'),
             onTap: () {
-              _navigateToNextScreen(context, const JoubJumPage());
+              navigateToNextScreen(context, const JoubJumPage());
             },
           ),
           ListTile(
             title: const Text('Friend'),
             onTap: () {
-              _navigateToNextScreen(context, const FriendPage());
+              navigateToNextScreen(context, const FriendPage());
             },
           ),
         ],
@@ -125,7 +126,8 @@ class _MapPageState extends State<MapPage> {
 
   AppBar appBar() {
     return AppBar(
-      backgroundColor: const Color(0x20000000),
+      automaticallyImplyLeading: false,
+      backgroundColor: appBarColor,
       elevation: 0,
       title: const Text(
         'Location',
@@ -142,7 +144,7 @@ class _MapPageState extends State<MapPage> {
               margin: const EdgeInsets.all(10),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: const Color(0xFFE5E4E2),
+                color: buttonColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: SvgPicture.asset(
@@ -158,14 +160,14 @@ class _MapPageState extends State<MapPage> {
       actions: [
         GestureDetector(
           onTap: () {
-            _navigateToNextScreen(context, const SearchPage());
+            navigateToNextScreen(context, const SearchPage());
           },
           child: Container(
             margin: const EdgeInsets.all(10),
             alignment: Alignment.center,
             width: 37,
             decoration: BoxDecoration(
-                color: const Color(0xFFE5E4E2),
+                color: buttonColor,
                 borderRadius: BorderRadius.circular(10)),
             child: SvgPicture.asset(
               'assets/icons/search_icon.svg',
@@ -178,9 +180,22 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  void _navigateToNextScreen(BuildContext context, Widget targetPage) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => targetPage));
+  void navigateToNextScreen(BuildContext context, Widget targetPage) {
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => targetPage,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    ));
   }
 
   Future<void> _cameraToPosition(LatLng pos) async {
