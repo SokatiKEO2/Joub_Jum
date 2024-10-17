@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joub_jum/pages/auth_pages/phone_num.dart';
 import 'package:joub_jum/pages/home.dart';
 import 'package:joub_jum/pages/map_page.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MapPage(),
+      home: const PhoneNum(),
     );
   }
 }

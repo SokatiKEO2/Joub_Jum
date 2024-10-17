@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/pages/map_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  void _loginButton() {}
+class _RegisterPageState extends State<RegisterPage> {
+  void _RegisterButton() {
+    navigateToNextScreen(context, const MapPage());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0x00000000),
+        backgroundColor: Color(0x00000000),
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,
@@ -26,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 100.0,
           ),
           const Text(
-            'Login',
+            'Register',
             style: TextStyle(
                 color: Colors.black, fontSize: 30, fontWeight: FontWeight.w600),
           ),
@@ -70,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 20.0,
           ),
           ElevatedButton(
-            onPressed: _loginButton,
+            onPressed: _RegisterButton,
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
@@ -78,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             ),
             child: const Text(
-              'LOGIN',
+              'Continue',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -88,10 +92,6 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(
             height: 20.0,
           ),
-          const Text(
-            'Forgot password?',
-            style: TextStyle(color: Colors.blue),
-          ),
           const SizedBox(
             height: 20.0,
           ),
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 15.0,
           ),
           const Text(
-            'Or Sign-in with',
+            'Or Register with',
             style: TextStyle(
               color: Colors.black,
               fontSize: 15.0,
