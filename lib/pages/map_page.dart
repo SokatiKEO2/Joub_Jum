@@ -24,22 +24,23 @@ class _MapPageState extends State<MapPage> {
   Location _locationController = new Location();
 
   final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
+  Completer<GoogleMapController>();
 
   static const LatLng _pGooglePlex = LatLng(11.5564, 104.9282);
   static const LatLng _testLocation = LatLng(11.50, 104.88);
   LatLng? _currentP;
 
   Map<PolylineId, Polyline> polylines = {};
+  bool _isFollowingUser = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getLocationUpdate().then((_) => {
-          getPolylinePoints()
-              .then((coordinate) => {generatePolylineFromPoints(coordinate)})
-        });
+      getPolylinePoints()
+          .then((coordinate) => {generatePolylineFromPoints(coordinate)})
+    });
   }
 
   @override
@@ -48,38 +49,49 @@ class _MapPageState extends State<MapPage> {
       extendBodyBehindAppBar: true,
       appBar: appBar(),
       drawer: Container(
-        width: 250,
-        height: 350,
-        child: buildDrawer()
+          width: 250,
+          height: 350,
+          child: buildDrawer()
 
       ),
       body: _currentP == null
           ? const Center(
-              child: Text("Loading..."),
-            )
+        child: Text("Loading..."),
+      )
           : GoogleMap(
-              //when map is created, we have access to controller
-              onMapCreated: ((GoogleMapController controller) =>
-                  _mapController.complete(controller)),
-              initialCameraPosition:
-                  const CameraPosition(target: _pGooglePlex, zoom: 13),
-              markers: {
-                //Current location of user
-                Marker(
-                    markerId: const MarkerId("_currentLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _currentP!),
-                const Marker(
-                    markerId: MarkerId("_sourceLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pGooglePlex),
-                const Marker(
-                    markerId: MarkerId("_destinationLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _testLocation)
-              },
-              polylines: Set<Polyline>.of(polylines.values),
-            ),
+        //when map is created, we have access to controller
+        onMapCreated: ((GoogleMapController controller) =>
+            _mapController.complete(controller)),
+        initialCameraPosition:
+        const CameraPosition(target: _pGooglePlex, zoom: 13),
+        markers: {
+          //Current location of user
+          Marker(
+              markerId: const MarkerId("_currentLocation"),
+              icon: BitmapDescriptor.defaultMarker,
+              position: _currentP!),
+          const Marker(
+              markerId: MarkerId("_sourceLocation"),
+              icon: BitmapDescriptor.defaultMarker,
+              position: _pGooglePlex),
+          const Marker(
+              markerId: MarkerId("_destinationLocation"),
+              icon: BitmapDescriptor.defaultMarker,
+              position: _testLocation)
+        },
+        polylines: Set<Polyline>.of(polylines.values),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _isFollowingUser = true; // Enable camera to follow the user
+            if (_currentP != null) {
+              _cameraToPosition(_currentP!);
+            }
+          });
+        },
+        child: const Icon(Icons.my_location),
+      ),
     );
   }
 
@@ -186,6 +198,9 @@ class _MapPageState extends State<MapPage> {
     CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
     await controller
         .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
+    setState(() {
+      _isFollowingUser = false; // Stop following user after camera moves
+    });
   }
 
   Future<void> getLocationUpdate() async {
@@ -216,7 +231,9 @@ class _MapPageState extends State<MapPage> {
           _currentP =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
-        _cameraToPosition(_currentP!);
+        if (_isFollowingUser) {
+          _cameraToPosition(_currentP!);
+        }
       }
     });
   }
@@ -229,7 +246,7 @@ class _MapPageState extends State<MapPage> {
         request: PolylineRequest(
             origin: PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
             destination:
-                PointLatLng(_testLocation.latitude, _testLocation.longitude),
+            PointLatLng(_testLocation.latitude, _testLocation.longitude),
             mode: TravelMode.driving));
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
