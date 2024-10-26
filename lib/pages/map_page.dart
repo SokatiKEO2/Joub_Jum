@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:joub_jum/auth.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:location/location.dart';
 import 'package:joub_jum/pages/search_page.dart';
@@ -11,7 +11,6 @@ import 'package:joub_jum/pages/menu_bar_pages/friend.dart';
 import 'package:joub_jum/pages/menu_bar_pages/invitation.dart';
 import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
 import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
-
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -34,12 +33,15 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    //TODO setState for Polyline ONLY after they selected a location
     super.initState();
-    getLocationUpdate().then((_) => {
-          getPolylinePoints()
-              .then((coordinate) => {generatePolylineFromPoints(coordinate)})
+    getLocationUpdate().then((_) {
+      _cameraToPosition(_currentP!).then((_) {
+        getPolylinePoints().then((coordinate) {
+          generatePolylineFromPoints(coordinate);
         });
+      });
+    });
   }
 
   @override
@@ -47,40 +49,53 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: appBar(),
-      drawer: Container(
-        width: 250,
-        height: 350,
-        child: buildDrawer()
-
-      ),
+      drawer: SizedBox(width: 250, height: 400, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
               child: Text("Loading..."),
             )
-          : GoogleMap(
-              //when map is created, we have access to controller
-              onMapCreated: ((GoogleMapController controller) =>
-                  _mapController.complete(controller)),
-              initialCameraPosition:
-                  const CameraPosition(target: _pGooglePlex, zoom: 13),
-              markers: {
-                //Current location of user
-                Marker(
-                    markerId: const MarkerId("_currentLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _currentP!),
-                const Marker(
-                    markerId: MarkerId("_sourceLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pGooglePlex),
-                const Marker(
-                    markerId: MarkerId("_destinationLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _testLocation)
-              },
-              polylines: Set<Polyline>.of(polylines.values),
+          : Stack(
+              children: [
+                GoogleMap(
+                  //when map is created, we have access to controller
+                  onMapCreated: ((GoogleMapController controller) =>
+                      _mapController.complete(controller)),
+                  initialCameraPosition:
+                      CameraPosition(target: _currentP!, zoom: 13),
+                  markers: {
+                    //Current location of user
+                    Marker(
+                        markerId: const MarkerId("_currentLocation"),
+                        icon: BitmapDescriptor.defaultMarker,
+                        position: _currentP!),
+                    const Marker(
+                        markerId: MarkerId("_sourceLocation"),
+                        icon: BitmapDescriptor.defaultMarker,
+                        position: _pGooglePlex),
+                    const Marker(
+                        markerId: MarkerId("_destinationLocation"),
+                        icon: BitmapDescriptor.defaultMarker,
+                        position: _testLocation)
+                  },
+                  polylines: Set<Polyline>.of(polylines.values),
+                ),
+                buildCurrentLocationButton(),
+              ],
             ),
     );
+  }
+
+  Positioned buildCurrentLocationButton() {
+    return Positioned(
+                bottom: 20,
+                right: 20,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    _cameraToPosition(_currentP!);
+                  },
+                  child: const Icon(Icons.my_location),
+                ),
+              );
   }
 
   Drawer buildDrawer() {
@@ -119,6 +134,13 @@ class _MapPageState extends State<MapPage> {
               navigateToNextScreen(context, const FriendPage());
             },
           ),
+          ListTile(
+            title: const Text('Sign Out'),
+            onTap: () async {
+              await AuthService().signout(context: context);
+            },
+          ),
+
         ],
       ),
     );
@@ -134,52 +156,24 @@ class _MapPageState extends State<MapPage> {
         style: TextStyle(color: Colors.black, fontSize: 18),
       ),
       centerTitle: true,
-      leading: Builder(
-        builder: (BuildContext context) {
-          return GestureDetector(
-            onTap: () {
-              Scaffold.of(context).openDrawer();
-            },
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: buttonColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SvgPicture.asset(
-                'assets/icons/3bars_icon.svg',
-                width: 24,
-                height: 24,
-              ),
-            ),
-          );
-        },
-      ),
-
-      actions: [
-        GestureDetector(
-          onTap: () {
+      leading: Builder(builder: (context) {
+        return IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        );
+      }),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
             navigateToNextScreen(context, const SearchPage());
           },
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            alignment: Alignment.center,
-            width: 37,
-            decoration: BoxDecoration(
-                color: buttonColor,
-                borderRadius: BorderRadius.circular(10)),
-            child: SvgPicture.asset(
-              'assets/icons/search_icon.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-        )
+        ),
       ],
     );
   }
-
 
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
@@ -216,11 +210,11 @@ class _MapPageState extends State<MapPage> {
           _currentP =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
-        _cameraToPosition(_currentP!);
       }
     });
   }
 
+  //TODO: Change point to _currentP and Selected Location
   Future<List<LatLng>> getPolylinePoints() async {
     List<LatLng> polylineCoordinate = [];
     PolylinePoints polylinePoints = PolylinePoints();
