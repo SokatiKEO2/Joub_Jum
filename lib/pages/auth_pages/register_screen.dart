@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:joub_jum/auth.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/auth_pages/widgets.dart';
+import 'login_screen.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -22,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
     );
   }
+
   void _registerWithGoogle() {
     // Add Google registration functionality
   }
@@ -43,31 +44,36 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: const CustomAppBar(),
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          const SizedBox(height: 100.0),
-          const RegisterText(),
-          EmailContainer(controller: _emailController),
-          PasswordContainer(controller: _passwordController),
-          const SizedBox(height: 20.0),
-          ContinueButton(onPressed: _registerButton),
-          const SizedBox(height: 20.0),
-          const Divider(),
-          const SizedBox(height: 15.0),
-          const Text(
-            'Or Register with',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 15.0,
+      body: SingleChildScrollView( // Wrap the body in a SingleChildScrollView
+        padding: const EdgeInsets.symmetric(horizontal: 25.0), // Padding for better layout
+        child: Column(
+          children: [
+            const SizedBox(height: 100.0),
+            const RegisterText(),
+            EmailContainer(controller: _emailController),
+            PasswordContainer(controller: _passwordController),
+            const SizedBox(height: 20.0),
+            ContinueButton(onPressed: _registerButton),
+            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
+            const Divider(),
+            const SizedBox(height: 15.0),
+            const AlreadyHaveAccount(),
+            const Text(
+              'Or Register with',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15.0,
+              ),
             ),
-          ),
-          const SizedBox(height: 25),
-          AltAuthRow(
-            context: context,
-            onGooglePressed: _registerWithGoogle,
-            onFacebookPressed: _registerWithFacebook,
-          ),
-        ],
+            const SizedBox(height: 25),
+            AltAuthRow(
+              context: context,
+              onGooglePressed: _registerWithGoogle,
+              onFacebookPressed: _registerWithFacebook,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -94,6 +100,35 @@ class ContinueButton extends StatelessWidget {
           color: Colors.black,
           fontSize: 18,
         ),
+      ),
+    );
+  }
+}
+
+class AlreadyHaveAccount extends StatelessWidget {
+  const AlreadyHaveAccount({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Already have an account? "),
+          GestureDetector(
+            onTap: () {
+              navigateToNextScreen(context, const LoginPage());
+            },
+            child: const Text(
+              "Log in",
+              style: TextStyle(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

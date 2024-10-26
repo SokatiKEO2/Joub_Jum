@@ -62,29 +62,49 @@ class EmailContainer extends StatelessWidget {
   }
 }
 
-class PasswordContainer extends StatelessWidget {
+class PasswordContainer extends StatefulWidget {
   final TextEditingController controller;
 
   const PasswordContainer({required this.controller, super.key});
+
+  @override
+  _PasswordContainerState createState() => _PasswordContainerState();
+}
+
+class _PasswordContainerState extends State<PasswordContainer> {
+  bool _isObscured = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isObscured = !_isObscured;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 15, left: 25, right: 25),
       child: TextField(
-        controller: controller,
-        obscureText: true,
-        decoration: const InputDecoration(
+        controller: widget.controller,
+        obscureText: _isObscured,
+        decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.all(13),
+          contentPadding: const EdgeInsets.all(13),
           hintText: 'Password',
-          hintStyle: TextStyle(color: Color(0xffcecccc)),
-          enabledBorder: OutlineInputBorder(
+          hintStyle: const TextStyle(color: Color(0xffcecccc)),
+          enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.blue, width: 2),
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isObscured ? Icons.visibility : Icons.visibility_off,
+              color: const Color(0xffcecccc),
+            ),
+            onPressed: _togglePasswordVisibility,
           ),
         ),
       ),
