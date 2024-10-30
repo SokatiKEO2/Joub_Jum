@@ -26,7 +26,8 @@ class _MapPageState extends State<MapPage> {
       Completer<GoogleMapController>();
 
   static const LatLng _pGooglePlex = LatLng(11.5564, 104.9282);
-  static const LatLng _testLocation = LatLng(11.50, 104.88);
+  static const LatLng _destination = LatLng(11.50, 104.88);
+  LatLng? _selectedP;
   LatLng? _currentP;
 
   Map<PolylineId, Polyline> polylines = {};
@@ -37,11 +38,7 @@ class _MapPageState extends State<MapPage> {
     //TODO setState for Polyline ONLY after they selected a location
     super.initState();
     getLocationUpdate().then((_) {
-      _cameraToPosition(_currentP!).then((_) {
-        getPolylinePoints().then((coordinate) {
-          generatePolylineFromPoints(coordinate);
-        });
-      });
+      _cameraToPosition(_currentP!);
     });
   }
 
@@ -69,14 +66,12 @@ class _MapPageState extends State<MapPage> {
                         markerId: const MarkerId("_currentLocation"),
                         icon: BitmapDescriptor.defaultMarker,
                         position: _currentP!),
-                    const Marker(
-                        markerId: MarkerId("_sourceLocation"),
+                    if (_selectedP != null) // Check if _destination is not null
+                      Marker(
+                        markerId: const MarkerId("_destinationLocation"),
                         icon: BitmapDescriptor.defaultMarker,
-                        position: _pGooglePlex),
-                    const Marker(
-                        markerId: MarkerId("_destinationLocation"),
-                        icon: BitmapDescriptor.defaultMarker,
-                        position: _testLocation)
+                        position: _selectedP!,
+                      ),
                   },
                   polylines: Set<Polyline>.of(polylines.values),
                 ),
@@ -169,7 +164,7 @@ class _MapPageState extends State<MapPage> {
         IconButton(
           icon: const Icon(Icons.search),
           onPressed: () {
-            navigateToNextScreen(context, const SearchPage());
+            navigateToSearch(context);
           },
         ),
       ],
@@ -183,16 +178,19 @@ class _MapPageState extends State<MapPage> {
         .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
   }
 
+
+
   Future<void> getLocationUpdate() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
-    //Check if location services are enabled on user's device, otherwise request the user to enable them
+    // Check if location services are enabled on user's device, otherwise request the user to enable them
     _serviceEnabled = await _locationController.serviceEnabled();
-    if (_serviceEnabled) {
+    if (!_serviceEnabled) {
       _serviceEnabled = await _locationController.requestService();
-    } else {
-      return;
+      if (!_serviceEnabled) {
+        return;
+      }
     }
 
     // Check if the app has location permission, If location permission is denied, request the user to grant permission
@@ -203,17 +201,19 @@ class _MapPageState extends State<MapPage> {
         return;
       }
     }
-    _locationController.onLocationChanged
-        .listen((LocationData currentLocation) {
-      if (currentLocation.latitude != null &&
-          currentLocation.longitude != null) {
-        setState(() {
-          _currentP =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        });
+
+    // Listen for location changes
+    _locationController.onLocationChanged.listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null && currentLocation.longitude != null) {
+        if (mounted) {
+          setState(() {
+            _currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          });
+        }
       }
     });
   }
+
 
   //TODO: Change point to _currentP and Selected Location
   Future<List<LatLng>> getPolylinePoints() async {
@@ -222,9 +222,9 @@ class _MapPageState extends State<MapPage> {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         googleApiKey: GOOGLE_MAP_API_KEY,
         request: PolylineRequest(
-            origin: PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
+            origin: PointLatLng(_currentP!.latitude, _currentP!.longitude),
             destination:
-                PointLatLng(_testLocation.latitude, _testLocation.longitude),
+                PointLatLng(_selectedP!.latitude, _selectedP!.longitude),
             mode: TravelMode.driving));
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
@@ -247,4 +247,26 @@ class _MapPageState extends State<MapPage> {
       polylines[id] = polyline;
     });
   }
+
+  Future<void> navigateToSearch(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      // Create the SelectionScreen in the next step.
+      MaterialPageRoute(builder: (context) => const SearchPage())
+    );
+    if (result != null){
+      setState(() {
+        _selectedP = result;
+      });
+      _cameraToPosition(_selectedP!).then((_){
+        getPolylinePoints().then((coordinate){
+          generatePolylineFromPoints(coordinate);
+        });
+      });
+
+    }
+  }
+
 }

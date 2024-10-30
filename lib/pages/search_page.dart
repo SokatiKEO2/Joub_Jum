@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/components/location_list_tile.dart';
 import 'package:joub_jum/components/network_util.dart';
 import 'package:joub_jum/models/autocomplete_prediction.dart';
 import 'package:joub_jum/models/place_auto_complete_response.dart';
+import 'package:joub_jum/pages/map_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -32,6 +36,24 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Future<void> fetchPlaceDetails(String? placeId) async {
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeId&key=$GOOGLE_MAP_API_KEY';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final placeDetails = json.decode(response.body)['result'];
+      final lat = placeDetails['geometry']['location']['lat'];
+      final lng = placeDetails['geometry']['location']['lng'];
+
+      LatLng selectedLocation = LatLng(lat, lng);
+      Navigator.pop(context, selectedLocation);
+
+    } else {
+      throw Exception('Failed to load place details');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +64,10 @@ class _SearchPageState extends State<SearchPage> {
               child: ListView.builder(
                 itemCount: placePrediction.length,
                 itemBuilder: (context, index) => LocationListTile(
-                    location: placePrediction[index].description!, press: () {}),
+                    location: placePrediction[index].description!,
+                    press: () {
+                      fetchPlaceDetails(placePrediction[index].placeId);
+                    }),
               ),
             ),
           ],

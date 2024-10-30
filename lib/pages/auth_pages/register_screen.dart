@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/auth.dart';
 import 'package:joub_jum/consts.dart';
-import 'package:joub_jum/pages/auth_pages/widgets.dart';
+import 'package:joub_jum/widgets/auth_widgets.dart';
 import 'login_screen.dart';
 
 class RegisterPage extends StatefulWidget {

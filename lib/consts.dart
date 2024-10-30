@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:joub_jum/pages/search_page.dart';
 
 const String GOOGLE_MAP_API_KEY = 'AIzaSyBVMeYfW8X9ZsiHk3gn2MO9Tj_FzFoJtUM';
 const Color appBarColor = Color(0x255198255);
@@ -26,3 +27,4 @@ void navigateToNextScreen(BuildContext context, Widget targetPage) {
     },
   ));
 }
+
