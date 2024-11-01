@@ -1,16 +1,14 @@
-import 'dart:ui';
-
 class CategoryModel {
   String name;
   String picture;
   String location;
-  Color boxColor;
+  String placeId;
 
   CategoryModel({
     required this.name,
     required this.picture,
     required this.location,
-    required this.boxColor,
+    required this.placeId,
   });
 
   // Static method to generate category models from passed data
@@ -22,7 +20,7 @@ class CategoryModel {
         name: data['name'],
         picture: data['picture'],
         location: data['location'],
-        boxColor: data['boxColor'],
+        placeId: data['placeId']
       ));
     }
 

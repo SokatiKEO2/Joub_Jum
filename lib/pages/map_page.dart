@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:location/location.dart';
@@ -21,26 +20,32 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  Location _locationController = new Location();
+  final Location _locationController = Location();
 
   final Completer<GoogleMapController> _mapController =
   Completer<GoogleMapController>();
 
-  static const LatLng _pGooglePlex = LatLng(11.5564, 104.9282);
-  static const LatLng _testLocation = LatLng(11.50, 104.88);
+  LatLng? _selectedP;
   LatLng? _currentP;
 
+  double _buttonBottomPadding = 84;
+
   Map<PolylineId, Polyline> polylines = {};
-  bool _isFollowingUser = true;
+  late BitmapDescriptor currentLocationMarker;
 
   @override
   void initState() {
-    // TODO: implement initState
+    //TODO setState for Polyline ONLY after they selected a location
+    setCustomMapPin();
     super.initState();
-    getLocationUpdate().then((_) => {
-      getPolylinePoints()
-          .then((coordinate) => {generatePolylineFromPoints(coordinate)})
+    getLocationUpdate().then((_) {
+      _cameraToPosition(_currentP!);
     });
+  }
+  void setCustomMapPin() async {
+    currentLocationMarker = await BitmapDescriptor.asset(
+        ImageConfiguration(size: Size(20, 20)),
+        'assets/icons/current_location.png');
   }
 
   @override
@@ -48,51 +53,55 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: appBar(),
-      drawer: Container(
-          width: 250,
-          height: 350,
-          child: buildDrawer()
-
-      ),
+      drawer: SizedBox(width: 250, height: 400, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
         child: Text("Loading..."),
       )
-          : GoogleMap(
-        //when map is created, we have access to controller
-        onMapCreated: ((GoogleMapController controller) =>
-            _mapController.complete(controller)),
-        initialCameraPosition:
-        const CameraPosition(target: _pGooglePlex, zoom: 13),
-        markers: {
-          //Current location of user
-          Marker(
-              markerId: const MarkerId("_currentLocation"),
-              icon: BitmapDescriptor.defaultMarker,
-              position: _currentP!),
-          const Marker(
-              markerId: MarkerId("_sourceLocation"),
-              icon: BitmapDescriptor.defaultMarker,
-              position: _pGooglePlex),
-          const Marker(
-              markerId: MarkerId("_destinationLocation"),
-              icon: BitmapDescriptor.defaultMarker,
-              position: _testLocation)
-        },
-        polylines: Set<Polyline>.of(polylines.values),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _isFollowingUser = true; // Enable camera to follow the user
-            if (_currentP != null) {
-              _cameraToPosition(_currentP!);
-            }
-          });
-        },
-        child: const Icon(Icons.my_location),
+          : Stack(
+        children: [
+          GoogleMap(
+            //when map is created, we have access to controller
+            onMapCreated: ((GoogleMapController controller) =>
+                _mapController.complete(controller)),
+            initialCameraPosition:
+            CameraPosition(target: _currentP!, zoom: 13),
+            markers: {
+              //Current location of user
+              Marker(
+                  markerId: const MarkerId("_currentLocation"),
+                  icon: currentLocationMarker,
+                  position: _currentP!),
+              if (_selectedP != null) // Check if _destination is not null
+                Marker(
+                  markerId: const MarkerId("_destinationLocation"),
+                  icon: BitmapDescriptor.defaultMarker,
+                  position: _selectedP!,
+                ),
+            },
+            polylines: Set<Polyline>.of(polylines.values),
+          ),
+          buildCurrentLocationButton(),
+        ],
       ),
     );
+  }
+
+  Stack buildCurrentLocationButton() {
+    return Stack(children: [
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: _buttonBottomPadding, right: 25),
+          child: FloatingActionButton(
+            onPressed: () {
+              _cameraToPosition(_currentP!);
+            },
+            child: const Icon(Icons.my_location),
+          ),
+        ),
+      ),
+    ]);
   }
 
   Drawer buildDrawer() {
@@ -110,7 +119,7 @@ class _MapPageState extends State<MapPage> {
           ListTile(
             title: const Text('Recommendation'),
             onTap: () {
-              navigateToNextScreen(context, const RecommendationPage());
+              navigateWithData(context, const RecommendationPage());
             },
           ),
           ListTile(
@@ -146,73 +155,43 @@ class _MapPageState extends State<MapPage> {
         style: TextStyle(color: Colors.black, fontSize: 18),
       ),
       centerTitle: true,
-      leading: Builder(
-        builder: (BuildContext context) {
-          return GestureDetector(
-            onTap: () {
-              Scaffold.of(context).openDrawer();
-            },
-            child: Container(
-              margin: const EdgeInsets.all(10),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: buttonColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: SvgPicture.asset(
-                'assets/icons/3bars_icon.svg',
-                width: 24,
-                height: 24,
-              ),
-            ),
-          );
-        },
-      ),
-
-      actions: [
-        GestureDetector(
-          onTap: () {
-            navigateToNextScreen(context, const SearchPage());
+      leading: Builder(builder: (context) {
+        return IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
           },
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            alignment: Alignment.center,
-            width: 37,
-            decoration: BoxDecoration(
-                color: buttonColor,
-                borderRadius: BorderRadius.circular(10)),
-            child: SvgPicture.asset(
-              'assets/icons/search_icon.svg',
-              width: 24,
-              height: 24,
-            ),
-          ),
-        )
+        );
+      }),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            navigateWithData(context, const SearchPage());
+          },
+        ),
       ],
     );
   }
 
-
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
+    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 14);
     await controller
         .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
-    setState(() {
-      _isFollowingUser = false; // Stop following user after camera moves
-    });
   }
 
   Future<void> getLocationUpdate() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
-    //Check if location services are enabled on user's device, otherwise request the user to enable them
+    // Check if location services are enabled on user's device, otherwise request the user to enable them
     _serviceEnabled = await _locationController.serviceEnabled();
-    if (_serviceEnabled) {
+    if (!_serviceEnabled) {
       _serviceEnabled = await _locationController.requestService();
-    } else {
-      return;
+      if (!_serviceEnabled) {
+        return;
+      }
     }
 
     // Check if the app has location permission, If location permission is denied, request the user to grant permission
@@ -223,30 +202,32 @@ class _MapPageState extends State<MapPage> {
         return;
       }
     }
+
+    // Listen for location changes
     _locationController.onLocationChanged
         .listen((LocationData currentLocation) {
       if (currentLocation.latitude != null &&
           currentLocation.longitude != null) {
-        setState(() {
-          _currentP =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        });
-        if (_isFollowingUser) {
-          _cameraToPosition(_currentP!);
+        if (mounted) {
+          setState(() {
+            _currentP =
+                LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          });
         }
       }
     });
   }
 
+  //TODO: Change point to _currentP and Selected Location
   Future<List<LatLng>> getPolylinePoints() async {
     List<LatLng> polylineCoordinate = [];
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         googleApiKey: GOOGLE_MAP_API_KEY,
         request: PolylineRequest(
-            origin: PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
+            origin: PointLatLng(_currentP!.latitude, _currentP!.longitude),
             destination:
-            PointLatLng(_testLocation.latitude, _testLocation.longitude),
+            PointLatLng(_selectedP!.latitude, _selectedP!.longitude),
             mode: TravelMode.driving));
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
@@ -264,9 +245,48 @@ class _MapPageState extends State<MapPage> {
         polylineId: id,
         color: Colors.blue,
         points: polylineCoordinate,
-        width: 8);
+        width: 4);
     setState(() {
       polylines[id] = polyline;
     });
   }
+
+  Future<void> navigateWithData(BuildContext context, Widget targetPage) async {
+    final result = await Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => targetPage,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    ));
+
+    if (result != null){
+      if (result is LatLng) {
+        Navigator.pop(context);
+        setState(() {
+          _selectedP = result;
+        });
+      }
+      if (result is List){
+        setState(() {
+          _selectedP = result[0];
+        });
+      }
+      _cameraToPosition(_selectedP!).then((_) {
+        getPolylinePoints().then((coordinate) {
+          generatePolylineFromPoints(coordinate);
+        });
+      });
+    }
+  }
 }
+

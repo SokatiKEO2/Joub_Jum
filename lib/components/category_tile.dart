@@ -18,7 +18,7 @@ class CategoryTile extends StatelessWidget {
       child: Container(
         width: 185,
         decoration: BoxDecoration(
-          color: category.boxColor.withOpacity(0.2),
+          color: const Color(0xffc8c8c8).withOpacity(0.2),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(

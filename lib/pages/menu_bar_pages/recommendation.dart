@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/components/Different_categories.dart';
 import 'package:joub_jum/components/category_tile.dart';
+import 'dart:convert';
+import 'package:joub_jum/consts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -10,6 +14,25 @@ class RecommendationPage extends StatefulWidget {
 }
 
 class _RecommendationPageState extends State<RecommendationPage> {
+
+  Future<void> fetchPlace(String? placeID) async {
+    final String placeSearchURL =
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$GOOGLE_MAP_API_KEY';
+    final response = await http.get(Uri.parse(placeSearchURL));
+
+    if (response.statusCode == 200) {
+      final placeDetailsData = json.decode(response.body)['result'];
+      final lat = placeDetailsData['geometry']['location']['lat'];
+      final lng = placeDetailsData['geometry']['location']['lng'];
+
+      LatLng place = LatLng(lat, lng);
+      Navigator.pop(context, place);
+
+    }
+    else {
+      throw Exception('Failed to load place details');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +97,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
           return CategoryTile(
             category: categoryList[index],
             onTap: () {
+              fetchPlace(categoryList[index].placeId);
               // Define the action when this tile is tapped
             },
           );
