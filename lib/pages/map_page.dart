@@ -27,6 +27,7 @@ class _MapPageState extends State<MapPage> {
 
   LatLng? _selectedP;
   LatLng? _currentP;
+  String? _photoUrl;
 
   double _buttonBottomPadding = 84;
 
@@ -44,16 +45,16 @@ class _MapPageState extends State<MapPage> {
   }
   void setCustomMapPin() async {
     currentLocationMarker = await BitmapDescriptor.asset(
-        ImageConfiguration(size: Size(20, 20)),
-        'assets/icons/current_location.png');
+        ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
+        'assets/icons/current_marker.png');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      drawer: buildDrawer(),
       appBar: appBar(),
-      drawer: SizedBox(width: 250, height: 400, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
         child: Text("Loading..."),
@@ -106,35 +107,57 @@ class _MapPageState extends State<MapPage> {
 
   Drawer buildDrawer() {
     return Drawer(
-      backgroundColor: menuBarColor,
+      backgroundColor: buttonColor,
       child: ListView(
-        padding: const EdgeInsets.all(25),
+        padding: EdgeInsets.zero,
         children: [
+          UserAccountsDrawerHeader(
+            accountName: Text('User1', style: TextStyle(color: Colors.black,),),
+            accountEmail: Text('user1@gmail.com', style: TextStyle(color: Colors.black)),
+            currentAccountPicture: CircleAvatar(
+              child: ClipOval(
+                child: Image.network(
+                    'https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8=',
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            decoration: const BoxDecoration(
+              color: menuBarColor
+            ),
+          ),
           ListTile(
+            leading: Icon(Icons.account_circle_rounded),
             title: const Text('Account'),
             onTap: () {
               navigateToNextScreen(context, const AccountPage());
             },
           ),
           ListTile(
+            leading: Icon(Icons.recommend_rounded),
             title: const Text('Recommendation'),
             onTap: () {
               navigateWithData(context, const RecommendationPage());
             },
           ),
           ListTile(
+            leading: Icon(Icons.insert_invitation_rounded),
             title: const Text('Invitation'),
             onTap: () {
               navigateToNextScreen(context, const InvitationPage());
             },
           ),
           ListTile(
-            title: const Text('Joub Jum'),
+            leading: Icon(Icons.map_rounded),
+            title: const Text('JoubJum'),
             onTap: () {
               navigateToNextScreen(context, const JoubJumPage());
             },
           ),
           ListTile(
+            leading: Icon(Icons.people_alt_rounded),
             title: const Text('Friend'),
             onTap: () {
               navigateToNextScreen(context, const FriendPage());
@@ -157,7 +180,7 @@ class _MapPageState extends State<MapPage> {
       centerTitle: true,
       leading: Builder(builder: (context) {
         return IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.menu_rounded),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -269,18 +292,12 @@ class _MapPageState extends State<MapPage> {
       },
     ));
 
-    if (result != null){
-      if (result is LatLng) {
-        Navigator.pop(context);
-        setState(() {
-          _selectedP = result;
-        });
-      }
-      if (result is List){
-        setState(() {
-          _selectedP = result[0];
-        });
-      }
+    if (result != null) {
+      Navigator.pop(context);
+      setState(() {
+        _selectedP = result[0];
+        _photoUrl = result[1];
+      });
       _cameraToPosition(_selectedP!).then((_) {
         getPolylinePoints().then((coordinate) {
           generatePolylineFromPoints(coordinate);

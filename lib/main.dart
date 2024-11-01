@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/pages/map_page.dart';
+import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const MapPage(),
+      home: const RecommendationPage(),
     );
   }
 }

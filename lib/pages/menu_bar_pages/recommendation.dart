@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/components/Different_categories.dart';
 import 'package:joub_jum/components/category_tile.dart';
-import 'dart:convert';
-import 'package:joub_jum/consts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:joub_jum/models/FetchPlaceData.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
@@ -15,23 +12,9 @@ class RecommendationPage extends StatefulWidget {
 
 class _RecommendationPageState extends State<RecommendationPage> {
 
-  Future<void> fetchPlace(String? placeID) async {
-    final String placeSearchURL =
-        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$GOOGLE_MAP_API_KEY';
-    final response = await http.get(Uri.parse(placeSearchURL));
-
-    if (response.statusCode == 200) {
-      final placeDetailsData = json.decode(response.body)['result'];
-      final lat = placeDetailsData['geometry']['location']['lat'];
-      final lng = placeDetailsData['geometry']['location']['lng'];
-
-      LatLng place = LatLng(lat, lng);
-      Navigator.pop(context, place);
-
-    }
-    else {
-      throw Exception('Failed to load place details');
-    }
+  void goToPlace(category) {
+    var result = fetchPlace(category.placeId);
+    Navigator.pop(context, result);
   }
 
   @override
@@ -46,12 +29,16 @@ class _RecommendationPageState extends State<RecommendationPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionHeading('Restaurants'),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               _buildCategoryList(Restaurants),
               const SizedBox(height: 40),
               _buildSectionHeading('Cafes'),
               const SizedBox(height: 15),
               _buildCategoryList(Cafes),
+              const SizedBox(height: 40),
+              _buildSectionHeading('Bars & Pubs'),
+              const SizedBox(height: 15),
+              _buildCategoryList(Bars_Pubs),
             ],
           ),
         ),
@@ -97,7 +84,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
           return CategoryTile(
             category: categoryList[index],
             onTap: () {
-              fetchPlace(categoryList[index].placeId);
+              goToPlace(categoryList[index]);
               // Define the action when this tile is tapped
             },
           );

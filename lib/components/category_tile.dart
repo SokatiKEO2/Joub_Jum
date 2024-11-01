@@ -35,7 +35,7 @@ class CategoryTile extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
+                child: Image.network(
                   category.picture,
                   fit: BoxFit.cover,
                   width: MediaQuery.of(context).size.width / 3,
