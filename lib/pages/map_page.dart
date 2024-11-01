@@ -11,6 +11,8 @@ import 'package:joub_jum/pages/menu_bar_pages/friend.dart';
 import 'package:joub_jum/pages/menu_bar_pages/invitation.dart';
 import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
 import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:joub_jum/widgets/sliding_panel.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -20,18 +22,20 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  Location _locationController = new Location();
+  final Location _locationController = Location();
+  final PanelController _panelController = PanelController();
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
-  static const LatLng _pGooglePlex = LatLng(11.5564, 104.9282);
-  static const LatLng _destination = LatLng(11.50, 104.88);
   LatLng? _selectedP;
   LatLng? _currentP;
+  String? _photoUrl;
+
+  double _buttonBottomPadding = 84;
+  double _sliderMaxHeight = 400;
 
   Map<PolylineId, Polyline> polylines = {};
-
 
   @override
   void initState() {
@@ -81,17 +85,35 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Positioned buildCurrentLocationButton() {
-    return Positioned(
-                bottom: 20,
-                right: 20,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    _cameraToPosition(_currentP!);
-                  },
-                  child: const Icon(Icons.my_location),
-                ),
-              );
+  Stack buildCurrentLocationButton() {
+    return Stack(children: [
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: _buttonBottomPadding, right: 25),
+          child: FloatingActionButton(
+            onPressed: () {
+              _cameraToPosition(_currentP!);
+            },
+            child: const Icon(Icons.my_location),
+          ),
+        ),
+      ),
+      if (_selectedP != null)
+        SlidingUpPanel(controller: _panelController,
+          maxHeight: _sliderMaxHeight,
+          renderPanelSheet: false,
+          panel: floatingPanel(_photoUrl!),
+          collapsed: floatingCollapsed(),
+          onPanelSlide: (double position) {
+            setState(() {
+              _buttonBottomPadding = 84 + (0.75 * position * _sliderMaxHeight);
+            });
+          },
+
+
+        ),
+    ]);
   }
 
   Drawer buildDrawer() {
@@ -109,7 +131,7 @@ class _MapPageState extends State<MapPage> {
           ListTile(
             title: const Text('Recommendation'),
             onTap: () {
-              navigateToNextScreen(context, const RecommendationPage());
+              navigateWithData(context, const RecommendationPage());
             },
           ),
           ListTile(
@@ -136,7 +158,6 @@ class _MapPageState extends State<MapPage> {
               await AuthService().signout(context: context);
             },
           ),
-
         ],
       ),
     );
@@ -164,7 +185,7 @@ class _MapPageState extends State<MapPage> {
         IconButton(
           icon: const Icon(Icons.search),
           onPressed: () {
-            navigateToSearch(context);
+            navigateWithData(context, const SearchPage());
           },
         ),
       ],
@@ -177,8 +198,6 @@ class _MapPageState extends State<MapPage> {
     await controller
         .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
   }
-
-
 
   Future<void> getLocationUpdate() async {
     bool _serviceEnabled;
@@ -203,17 +222,19 @@ class _MapPageState extends State<MapPage> {
     }
 
     // Listen for location changes
-    _locationController.onLocationChanged.listen((LocationData currentLocation) {
-      if (currentLocation.latitude != null && currentLocation.longitude != null) {
+    _locationController.onLocationChanged
+        .listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
         if (mounted) {
           setState(() {
-            _currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+            _currentP =
+                LatLng(currentLocation.latitude!, currentLocation.longitude!);
           });
         }
       }
     });
   }
-
 
   //TODO: Change point to _currentP and Selected Location
   Future<List<LatLng>> getPolylinePoints() async {
@@ -242,31 +263,40 @@ class _MapPageState extends State<MapPage> {
         polylineId: id,
         color: Colors.blue,
         points: polylineCoordinate,
-        width: 8);
+        width: 4);
     setState(() {
       polylines[id] = polyline;
     });
   }
 
-  Future<void> navigateToSearch(BuildContext context) async {
-    // Navigator.push returns a Future that completes after calling
-    // Navigator.pop on the Selection Screen.
-    final result = await Navigator.push(
-      context,
-      // Create the SelectionScreen in the next step.
-      MaterialPageRoute(builder: (context) => const SearchPage())
-    );
-    if (result != null){
+  Future<void> navigateWithData(BuildContext context, Widget targetPage) async {
+    final result = await Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => targetPage,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    ));
+
+    if (result != null) {
       setState(() {
-        _selectedP = result;
+        _selectedP = result[0];
+        _photoUrl = result[1];
       });
-      _cameraToPosition(_selectedP!).then((_){
-        getPolylinePoints().then((coordinate){
+      _cameraToPosition(_selectedP!).then((_) {
+        getPolylinePoints().then((coordinate) {
           generatePolylineFromPoints(coordinate);
         });
       });
-
     }
   }
-
 }

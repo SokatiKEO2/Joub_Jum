@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:joub_jum/components/location_list_tile.dart';
 import 'package:joub_jum/components/network_util.dart';
 import 'package:joub_jum/models/autocomplete_prediction.dart';
 import 'package:joub_jum/models/place_auto_complete_response.dart';
-import 'package:joub_jum/pages/map_page.dart';
+import 'dart:typed_data';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -40,18 +41,28 @@ class _SearchPageState extends State<SearchPage> {
     final String url =
         'https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeId&key=$GOOGLE_MAP_API_KEY';
     final response = await http.get(Uri.parse(url));
-
     if (response.statusCode == 200) {
       final placeDetails = json.decode(response.body)['result'];
       final lat = placeDetails['geometry']['location']['lat'];
       final lng = placeDetails['geometry']['location']['lng'];
-
+      final photoReference = placeDetails['photos'][0]['photo_reference'];
       LatLng selectedLocation = LatLng(lat, lng);
-      Navigator.pop(context, selectedLocation);
+      String photoData = getPlacePhotoData(photoReference);
+
+      List<dynamic> locationAndPhotoData = [selectedLocation, photoData];
+
+      Navigator.pop(context, locationAndPhotoData);
 
     } else {
       throw Exception('Failed to load place details');
     }
+  }
+
+  String getPlacePhotoData(String? photoReference) {
+    const maxHeight = 200;
+    const maxWidth = 200;
+    final String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxheight=$maxHeight&photoreference=$photoReference&key=$GOOGLE_MAP_API_KEY";
+    return url;
   }
 
   @override
