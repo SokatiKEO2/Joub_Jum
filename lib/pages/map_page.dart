@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:joub_jum/auth.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:location/location.dart';
 import 'package:joub_jum/pages/search_page.dart';
@@ -31,6 +31,8 @@ class _MapPageState extends State<MapPage> {
   LatLng? _selectedP;
   LatLng? _currentP;
   String? _photoUrl;
+  String? userEmail;
+
 
   double _buttonBottomPadding = 84;
   double _sliderMaxHeight = 400;
@@ -41,17 +43,19 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     //TODO setState for Polyline ONLY after they selected a location
     super.initState();
-    getLocationUpdate().then((_) {
-      _cameraToPosition(_currentP!);
-    });
-  }
+    getCurrentUserEmail();
+      getLocationUpdate().then((_) {
+        _cameraToPosition(_currentP!);
+      });
+    }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: appBar(),
-      drawer: SizedBox(width: 250, height: 400, child: buildDrawer()),
+      drawer: SizedBox(width: 300, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
               child: Text("Loading..."),
@@ -118,44 +122,60 @@ class _MapPageState extends State<MapPage> {
 
   Drawer buildDrawer() {
     return Drawer(
-      backgroundColor: menuBarColor,
+      backgroundColor: buttonColor,
       child: ListView(
-        padding: const EdgeInsets.all(25),
+        padding: EdgeInsets.zero,
         children: [
+          UserAccountsDrawerHeader(
+            accountName: Text('User1', style: TextStyle(color: Colors.black,),),
+            accountEmail: Text(userEmail!, style: TextStyle(color: Colors.black)),
+            currentAccountPicture: CircleAvatar(
+              child: ClipOval(
+                child: Image.network(
+                  'https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8=',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            decoration: const BoxDecoration(
+                color: menuBarColor
+            ),
+          ),
           ListTile(
+            leading: Icon(Icons.account_circle_rounded),
             title: const Text('Account'),
             onTap: () {
               navigateToNextScreen(context, const AccountPage());
             },
           ),
           ListTile(
+            leading: Icon(Icons.recommend_rounded),
             title: const Text('Recommendation'),
             onTap: () {
               navigateWithData(context, const RecommendationPage());
             },
           ),
           ListTile(
+            leading: Icon(Icons.insert_invitation_rounded),
             title: const Text('Invitation'),
             onTap: () {
               navigateToNextScreen(context, const InvitationPage());
             },
           ),
           ListTile(
-            title: const Text('Joub Jum'),
+            leading: Icon(Icons.map_rounded),
+            title: const Text('JoubJum'),
             onTap: () {
               navigateToNextScreen(context, const JoubJumPage());
             },
           ),
           ListTile(
+            leading: Icon(Icons.people_alt_rounded),
             title: const Text('Friend'),
             onTap: () {
               navigateToNextScreen(context, const FriendPage());
-            },
-          ),
-          ListTile(
-            title: const Text('Sign Out'),
-            onTap: () async {
-              await AuthService().signout(context: context);
             },
           ),
         ],
@@ -296,6 +316,15 @@ class _MapPageState extends State<MapPage> {
         getPolylinePoints().then((coordinate) {
           generatePolylineFromPoints(coordinate);
         });
+      });
+    }
+  }
+  //TODO add username as well
+  Future<void> getCurrentUserEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userEmail = user.email;
       });
     }
   }

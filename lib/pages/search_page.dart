@@ -45,6 +45,8 @@ class _SearchPageState extends State<SearchPage> {
       final placeDetails = json.decode(response.body)['result'];
       final lat = placeDetails['geometry']['location']['lat'];
       final lng = placeDetails['geometry']['location']['lng'];
+      //TODO if there's no photo reference.
+      print(url);
       final photoReference = placeDetails['photos'][0]['photo_reference'];
       LatLng selectedLocation = LatLng(lat, lng);
       String photoData = getPlacePhotoData(photoReference);
