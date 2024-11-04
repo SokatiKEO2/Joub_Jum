@@ -30,8 +30,9 @@ class _MapPageState extends State<MapPage> {
 
   LatLng? _selectedP;
   LatLng? _currentP;
-  String? _photoUrl;
+  List? _photoUrl;
   String? userEmail;
+  String? _placeName;
 
 
   double _buttonBottomPadding = 84;
@@ -107,7 +108,7 @@ class _MapPageState extends State<MapPage> {
         SlidingUpPanel(controller: _panelController,
           maxHeight: _sliderMaxHeight,
           renderPanelSheet: false,
-          panel: floatingPanel(_photoUrl!),
+          panel: floatingPanel(_photoUrl!, _placeName!),
           collapsed: floatingCollapsed(),
           onPanelSlide: (double position) {
             setState(() {
@@ -311,6 +312,7 @@ class _MapPageState extends State<MapPage> {
       setState(() {
         _selectedP = result[0];
         _photoUrl = result[1];
+        _placeName = result[2];
       });
       _cameraToPosition(_selectedP!).then((_) {
         getPolylinePoints().then((coordinate) {
