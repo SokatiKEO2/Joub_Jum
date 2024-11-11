@@ -24,12 +24,12 @@ class _RecommendationPageState extends State<RecommendationPage> {
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSectionHeading('Restaurants'),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _buildCategoryList(Restaurants),
               const SizedBox(height: 40),
               _buildSectionHeading('Cafes'),
