@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const FriendPage(),
+      home: const InvitationPage(),
     );
   }
 }

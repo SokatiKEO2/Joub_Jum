@@ -11,34 +11,39 @@ class FriendPage extends StatefulWidget {
 
 class _FriendPageState extends State<FriendPage> {
   int _selectedIndex = 0;
-  List<String> _friends = [
-    "Kati", "Chamroeun", "Pich", "Kimhak", "Keameng", "Youhorng",
+  final List<Map<String, String>> _friends = [
+    {"name": "Kati", "imagePath": 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'},
+    {"name": "Chamroeun", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Pich", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Kimhak", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Keameng", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Youhorng", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
   ];
-  List<String> _requests = [
-    "Samnang", "Panha", "Sokun",
+  final List<Map<String, String>> _requests = [
+    {"name": "Samnang", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Panha", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Sokun", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
   ];
 
-  // This method will be called when a bottom navigation item is tapped.
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  void _acceptRequest(String request) {
+  void _acceptRequest(Map<String, String> request) {
     setState(() {
       _friends.add(request);
       _requests.remove(request);
     });
   }
 
-  void _rejectRequest(String request) {
+  void _rejectRequest(Map<String, String> request) {
     setState(() {
       _requests.remove(request);
     });
   }
 
-  // Define the pages for the bottom navigation bar
   late final List<Widget> _pages;
 
   @override
@@ -84,21 +89,21 @@ class _FriendPageState extends State<FriendPage> {
   }
 }
 
-  Padding buildHeader(String header) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Text(
-        header,
-        style: const TextStyle(
-          fontSize: 23, fontWeight: FontWeight.bold,
-        ),
+Padding buildHeader(String header) {
+  return Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Text(
+      header,
+      style: const TextStyle(
+        fontSize: 23, fontWeight: FontWeight.bold,
       ),
-    );
-  }
+    ),
+  );
+}
 
-// FriendListPage takes the dynamic friends list as a parameter
+// FriendListPage with updated structure to display friends' images and names
 class FriendListPage extends StatelessWidget {
-  final List<String> friends;
+  final List<Map<String, String>> friends;
 
   const FriendListPage({super.key, required this.friends});
 
@@ -121,7 +126,7 @@ class FriendListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFriendTile(String user) {
+  Widget _buildFriendTile(Map<String, String> friend) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Container(
@@ -135,12 +140,19 @@ class FriendListPage extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 30.0,
-              backgroundImage: AssetImage(''), // Add the path to the image asset here
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: Colors.transparent,
+              child: ClipOval(
+                child: Image.network(
+                  friend['imagePath']!,
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             const SizedBox(width: 10.0),
             Text(
-              user,
+              friend['name']!,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -154,11 +166,11 @@ class FriendListPage extends StatelessWidget {
   }
 }
 
-// Updated RequestPage to StatefulWidget to allow for UI updates
+// Updated RequestPage to display requests' images and names
 class RequestPage extends StatefulWidget {
-  final List<String> requests;
-  final Function(String) accept;
-  final Function(String) reject;
+  final List<Map<String, String>> requests;
+  final Function(Map<String, String>) accept;
+  final Function(Map<String, String>) reject;
 
   const RequestPage({super.key, required this.requests, required this.accept, required this.reject});
 
@@ -191,7 +203,7 @@ class _RequestPageState extends State<RequestPage> {
     );
   }
 
-  Widget _buildRequestTile(String user) {
+  Widget _buildRequestTile(Map<String, String> request) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Container(
@@ -205,8 +217,15 @@ class _RequestPageState extends State<RequestPage> {
           children: [
             CircleAvatar(
               radius: 35.0,
-              backgroundImage: AssetImage(''), // Add the path to the image asset here
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: Colors.transparent,
+              child: ClipOval(
+                child: Image.network(
+                  request['imagePath']!,
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             const SizedBox(width: 12.0),
             Expanded(
@@ -215,7 +234,7 @@ class _RequestPageState extends State<RequestPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    user,
+                    request['name']!,
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 23,
@@ -223,7 +242,7 @@ class _RequestPageState extends State<RequestPage> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  buildButtons(user),
+                  buildButtons(request),
                 ],
               ),
             ),
@@ -233,13 +252,13 @@ class _RequestPageState extends State<RequestPage> {
     );
   }
 
-  Row buildButtons(String user) {
+  Row buildButtons(Map<String, String> request) {
     return Row(
       children: [
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              widget.accept(user);
+              widget.accept(request);
               setState(() {}); // Refresh the UI after accepting
             },
             style: ElevatedButton.styleFrom(
@@ -262,7 +281,7 @@ class _RequestPageState extends State<RequestPage> {
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              widget.reject(user);
+              widget.reject(request);
               setState(() {}); // Refresh the UI after rejecting
             },
             style: ElevatedButton.styleFrom(

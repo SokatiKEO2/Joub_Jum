@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../consts.dart';
+import 'package:joub_jum/consts.dart';
 
 class JoubJumPage extends StatefulWidget {
   const JoubJumPage({super.key});
@@ -10,84 +9,128 @@ class JoubJumPage extends StatefulWidget {
 }
 
 class _JoubJumPageState extends State<JoubJumPage> {
+  // List to store invitation details
+  final List<Map<String, String>> _joubjums = [
+    {
+      "user": "Chamroeun",
+      "date": "03/11/24",
+      "time": "6:00 PM",
+      "location": "Ambience Bar",
+      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "user": "Kati",
+      "date": "04/11/24",
+      "time": "8:00 PM",
+      "location": "Hub",
+      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-        child: Column(
-          children: [
-            buildInvitations('User1', '03/11/24', '6:00 PM', 'Ambience Bar'),
-            buildInvitations('Kati', '04/11/24', '8:00 PM', 'Hub'),
-          ],
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              itemCount: _joubjums.length,
+              itemBuilder: (BuildContext context, int index) {
+                return buildJoubJumCard(_joubjums[index]);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildInvitations(String user, String date, String time, String location) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: GestureDetector(
-        onTap: () => _onInvitationTap(user, date, time, location),
-        child: Container(
-          height: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16.0),
-            color: buttonColor,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              RichText(
-                text: TextSpan(
-                  text: 'JoubJum with $user\n',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '\nDate & Time: $date, $time\nLocation: $location',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+  Widget buildJoubJumCard(Map<String, String> joubjum) {
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12.0),
+        child: GestureDetector(
+          onTap: () => _onInvitationTap(joubjum['user']!),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              color: buttonColor,
+            ),
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 25.0,
+                            backgroundColor: Colors.transparent,
+                            child: ClipOval(
+                              child: Image.network(
+                                joubjum['imagePath']!,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8.0,),
+                          Expanded(
+                            child: Text(
+                              'JoubJum with ${joubjum['user']}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 10.0), // Space between title and details
+                      Text(
+                        'Date & Time: ${joubjum['date']}, ${joubjum['time']}\nLocation: ${joubjum['location']}',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.black,
-                size: 24,
-              ),
-            ],
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Function to handle invitation tap
-  void _onInvitationTap(String user, String date, String time, String location) {
+  void _onInvitationTap(String user) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Tapped on JoubJum with $user'),
       ),
     );
-    // You can replace this with any function you want to call on tap.
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text(
-        'JoubJum',
+        'JoubJums',
         style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
       ),
       backgroundColor: const Color(0xFFcaffbf),
