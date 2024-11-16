@@ -114,7 +114,7 @@ class _PhoneNumState extends State<PhoneNum> {
                       navigateToNextScreen(context, const LoginPage());
                     },
                     child: const Text(
-                      "Log in",
+                      "Login",
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
