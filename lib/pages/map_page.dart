@@ -44,24 +44,27 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     //TODO setState for Polyline ONLY after they selected a location
-    setCustomMapPin();
     super.initState();
+    setCustomMapPin();
+    getCurrentUserEmail();
     getLocationUpdate().then((_) {
       _cameraToPosition(_currentP!);
     });
   }
+
   void setCustomMapPin() async {
     currentLocationMarker = await BitmapDescriptor.asset(
         ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
         'assets/icons/current_marker.png');
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      drawer: buildDrawer(),
       appBar: appBar(),
+      drawer: SizedBox(width: 300, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
         child: Text("Loading..."),
@@ -92,37 +95,6 @@ class _MapPageState extends State<MapPage> {
           buildCurrentLocationButton(),
         ],
       ),
-      drawer: SizedBox(width: 300, child: buildDrawer()),
-      body: _currentP == null
-          ? const Center(
-              child: Text("Loading..."),
-            )
-          : Stack(
-              children: [
-                GoogleMap(
-                  //when map is created, we have access to controller
-                  onMapCreated: ((GoogleMapController controller) =>
-                      _mapController.complete(controller)),
-                  initialCameraPosition:
-                      CameraPosition(target: _currentP!, zoom: 13),
-                  markers: {
-                    //Current location of user
-                    Marker(
-                        markerId: const MarkerId("_currentLocation"),
-                        icon: BitmapDescriptor.defaultMarker,
-                        position: _currentP!),
-                    if (_selectedP != null) // Check if _destination is not null
-                      Marker(
-                        markerId: const MarkerId("_destinationLocation"),
-                        icon: BitmapDescriptor.defaultMarker,
-                        position: _selectedP!,
-                      ),
-                  },
-                  polylines: Set<Polyline>.of(polylines.values),
-                ),
-                buildCurrentLocationButton(),
-              ],
-            ),
     );
   }
 
@@ -177,14 +149,14 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
             decoration: const BoxDecoration(
-              color: menuBarColor
+                color: menuBarColor
             ),
           ),
           ListTile(
             leading: Icon(Icons.account_circle_rounded),
             title: const Text('Account'),
             onTap: () {
-              navigateToNextScreen(context, const JoubJumPage());
+              navigateToNextScreen(context, const AccountPage());
             },
           ),
           ListTile(
@@ -212,7 +184,7 @@ class _MapPageState extends State<MapPage> {
             leading: Icon(Icons.people_alt_rounded),
             title: const Text('Friend'),
             onTap: () {
-              navigateToNextScreen(context, const AccountPage());
+              navigateToNextScreen(context, const FriendPage());
             },
           ),
         ],
@@ -232,7 +204,7 @@ class _MapPageState extends State<MapPage> {
       centerTitle: true,
       leading: Builder(builder: (context) {
         return IconButton(
-          icon: const Icon(Icons.menu_rounded),
+          icon: const Icon(Icons.menu),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -251,7 +223,7 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 14);
+    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
     await controller
         .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
   }
@@ -366,6 +338,4 @@ class _MapPageState extends State<MapPage> {
       });
     }
   }
-
 }
-
