@@ -23,15 +23,24 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
       "location": "Hub",
       "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
       "placeId": "ChIJ3VnQszZRCTER3Wc7W4e2DCw",
-      "invitees": {"Pich", "Panha"}
+      "invitees": [
+        {
+          "name": "Pich",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+        },
+        {
+          "name": "Panha",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+        },
+      ],
     },
   ];
 
   final List<Map<String, dynamic>> _joubJums = [];
 
-  List<Map<String, dynamic>> get invitations => List.unmodifiable(_invitations);
+  List<Map<String, dynamic>> get invitations => _invitations;
 
-  List<Map<String, dynamic>> get joubJums => List.unmodifiable(_joubJums);
+  List<Map<String, dynamic>> get joubJums => _joubJums;
 
   void acceptInvitation(Map<String, dynamic> invitation) {
     _invitations.remove(invitation);
@@ -41,6 +50,11 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
 
   void rejectInvitation(Map<String, dynamic> invitation) {
     _invitations.remove(invitation);
+    notifyListeners();
+  }
+
+  void deleteJoubJum(Map<String, dynamic> joubjum){
+    _joubJums.remove(joubjum);
     notifyListeners();
   }
 }

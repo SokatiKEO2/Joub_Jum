@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/menu_bar_pages/joub_jumDetails.dart';
+import 'package:provider/provider.dart';
+
+import 'Provider.dart';
 
 class JoubJumPage extends StatefulWidget {
   const JoubJumPage({super.key});
@@ -10,40 +13,11 @@ class JoubJumPage extends StatefulWidget {
 }
 
 class _JoubJumPageState extends State<JoubJumPage> {
-  // List to store invitation details
-  final List<Map<String, dynamic>> _joubjums = [
-    {
-      "user": "Samnang",
-      "date": "03/11/24",
-      "time": "6:00 PM",
-      "location": "Ambience Bar",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-      "placeId": "ChIJT17FJIlRCTERKJ2gjPwJf6A",
-      "invitees": [
-        {"name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        },
-        {"name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        },
-        {"name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        }
-      ]
-    },
-    {
-      "user": "Panha",
-      "date": "04/11/24",
-      "time": "8:00 PM",
-      "location": "Hub",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-      "placeId": "ChIJ3VnQszZRCTER3Wc7W4e2DCw",
-      "invitees": {"Pich", "Panha"}
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final invitationAndJoubJumState = Provider.of<InvitationsAndJoubJumsState>(context);
+    final joubjums = invitationAndJoubJumState.joubJums;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
@@ -51,11 +25,16 @@ class _JoubJumPageState extends State<JoubJumPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: ListView.builder(
+            child: joubjums.isEmpty ? Center(
+              child: Text(
+                'No new invitations',
+                style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+              ),
+            ): ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-              itemCount: _joubjums.length,
+              itemCount: joubjums.length,
               itemBuilder: (BuildContext context, int index) {
-                return buildJoubJumCard(_joubjums[index]);
+                return buildJoubJumCard(joubjums[index]);
               },
             ),
           ),
@@ -155,7 +134,7 @@ class _JoubJumPageState extends State<JoubJumPage> {
       ),
     );
     setState(() {
-      _joubjums.remove(joubjum);
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false).deleteJoubJum(joubjum);
     });
   }
 

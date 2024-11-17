@@ -209,7 +209,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
         const SizedBox(width: 8.0),
         Expanded(
           child: ElevatedButton(
-            onPressed: () => Navigator.pop(context, 'accept'),
+            onPressed: () => Navigator.pop(context, 'reject'),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),

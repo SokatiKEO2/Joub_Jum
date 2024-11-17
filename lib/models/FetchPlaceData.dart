@@ -13,11 +13,18 @@ Future<List> fetchPlace(String? placeID) async {
     final placeDetails = json.decode(response.body)['result'];
     final lat = placeDetails['geometry']['location']['lat'];
     final lng = placeDetails['geometry']['location']['lng'];
-    final photoReference = placeDetails['photos'][0]['photo_reference'];
-    LatLng selectedLocation = LatLng(lat, lng);
-    String photoData = getPlacePhotoData(photoReference);
+    final photosInDetails = placeDetails['photos'] as List;  // Cast to List for type safety
+    List<dynamic> photos = [];
+    for (var photo in photosInDetails) {
+      final photoReference = photo['photo_reference'];
+      String photoData = getPlacePhotoData(photoReference);
+      photos.add(photoData);
+    }
 
-    List<dynamic> locationAndPhotoData = [selectedLocation, photoData];
+    LatLng selectedLocation = LatLng(lat, lng);
+    String placeName = placeDetails['name'];
+
+    List<dynamic> locationAndPhotoData = [selectedLocation, photos, placeName];
     return locationAndPhotoData;
 
   }
