@@ -132,7 +132,7 @@ class _MapPageState extends State<MapPage> {
             leading: Icon(Icons.account_circle_rounded),
             title: const Text('Account'),
             onTap: () {
-              navigateToNextScreen(context, const JoubJumPage());
+              navigateToNextScreen(context, const AccountPage());
             },
           ),
           ListTile(
@@ -146,21 +146,21 @@ class _MapPageState extends State<MapPage> {
             leading: Icon(Icons.insert_invitation_rounded),
             title: const Text('Invitation'),
             onTap: () {
-              navigateToNextScreen(context, const InvitationPage());
+              navigateWithData(context, const InvitationPage());
             },
           ),
           ListTile(
             leading: Icon(Icons.map_rounded),
             title: const Text('JoubJum'),
             onTap: () {
-              navigateToNextScreen(context, const JoubJumPage());
+              navigateWithData(context, const JoubJumPage());
             },
           ),
           ListTile(
             leading: Icon(Icons.people_alt_rounded),
             title: const Text('Friend'),
             onTap: () {
-              navigateToNextScreen(context, const AccountPage());
+              navigateToNextScreen(context, const FriendPage());
             },
           ),
         ],

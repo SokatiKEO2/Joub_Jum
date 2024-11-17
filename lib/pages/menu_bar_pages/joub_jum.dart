@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/pages/menu_bar_pages/joub_jumDetails.dart';
 
 class JoubJumPage extends StatefulWidget {
   const JoubJumPage({super.key});
@@ -10,20 +11,34 @@ class JoubJumPage extends StatefulWidget {
 
 class _JoubJumPageState extends State<JoubJumPage> {
   // List to store invitation details
-  final List<Map<String, String>> _joubjums = [
+  final List<Map<String, dynamic>> _joubjums = [
     {
-      "user": "Chamroeun",
+      "user": "Samnang",
       "date": "03/11/24",
       "time": "6:00 PM",
       "location": "Ambience Bar",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+      "placeId": "ChIJT17FJIlRCTERKJ2gjPwJf6A",
+      "invitees": [
+        {"name": "Kati",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+        },
+        {"name": "Kati",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+        },
+        {"name": "Kati",
+          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+        }
+      ]
     },
     {
-      "user": "Kati",
+      "user": "Panha",
       "date": "04/11/24",
       "time": "8:00 PM",
       "location": "Hub",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+      "placeId": "ChIJ3VnQszZRCTER3Wc7W4e2DCw",
+      "invitees": {"Pich", "Panha"}
     },
   ];
 
@@ -49,12 +64,12 @@ class _JoubJumPageState extends State<JoubJumPage> {
     );
   }
 
-  Widget buildJoubJumCard(Map<String, String> joubjum) {
+  Widget buildJoubJumCard(Map<String, dynamic> joubjum) {
     return Flexible(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 12.0),
         child: GestureDetector(
-          onTap: () => _onInvitationTap(joubjum['user']!),
+          onTap: () => _onJoubJumTap(joubjum),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
@@ -119,12 +134,29 @@ class _JoubJumPageState extends State<JoubJumPage> {
     );
   }
 
-  void _onInvitationTap(String user) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Tapped on JoubJum with $user'),
+  Future<void> _onJoubJumTap(Map<String, dynamic> joubjum) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => JoubJumDetailsPage(joubjumDetails: joubjum),
       ),
     );
+    if (result == 'delete') {
+      setState(() {
+        _onRejectPressed(joubjum);
+      });
+    }
+  }
+
+  void _onRejectPressed(Map<String, dynamic> joubjum) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Cancel JoubJum from ${joubjum['user']}'),
+      ),
+    );
+    setState(() {
+      _joubjums.remove(joubjum);
+    });
   }
 
   AppBar _buildAppBar() {

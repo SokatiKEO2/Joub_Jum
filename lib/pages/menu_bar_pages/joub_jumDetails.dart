@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/models/FetchPlaceData.dart';
 
-class InvitationDetailsPage extends StatefulWidget {
+class JoubJumDetailsPage extends StatefulWidget {
 
-  final Map<String, dynamic> invitationDetails;
-  const InvitationDetailsPage({super.key, required this.invitationDetails});
+  final Map<String, dynamic> joubjumDetails;
+  const JoubJumDetailsPage({super.key, required this.joubjumDetails});
 
   @override
-  State<InvitationDetailsPage> createState() => _InvitationDetailsPageState();
+  State<JoubJumDetailsPage> createState() => _JoubJumDetailsPageState();
 }
 
-class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
-  late Map<String, dynamic> _invitationDetails;
+class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
+  late Map<String, dynamic> _joubjumDetails;
 
-  void goToPlace(Map<String, dynamic> invitation) {
-    var result = fetchPlace(invitation['placeId']);
+  void goToPlace(Map<String, dynamic> joubjum) {
+    var result = fetchPlace(joubjum['placeId']);
     Navigator.pop(context);
     Navigator.pop(context, result);
   }
@@ -23,7 +23,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   @override
   void initState(){
     super.initState();
-    _invitationDetails = widget.invitationDetails;
+    _joubjumDetails = widget.joubjumDetails;
   }
 
   @override
@@ -57,7 +57,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                           Row(
                             children: [
                               const Text(
-                                'From:',
+                                'Created by:',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -70,7 +70,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                                 backgroundColor: Colors.transparent,
                                 child: ClipOval(
                                   child: Image.network(
-                                    _invitationDetails['imagePath']!,
+                                    _joubjumDetails['imagePath']!,
                                     width: 40,
                                     height: 40,
                                     fit: BoxFit.cover,
@@ -79,7 +79,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                               ),
                               const SizedBox(width: 10.0),
                               Text(
-                                _invitationDetails['user']!,
+                                _joubjumDetails['user']!,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -93,7 +93,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  'Location: ${_invitationDetails['location']!}',
+                                  'Location: ${_joubjumDetails['location']!}',
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 20,
@@ -108,7 +108,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                                 height: 40,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    goToPlace(_invitationDetails);
+                                    goToPlace(_joubjumDetails);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.zero,
@@ -129,7 +129,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                           ),
                           const Divider(),
                           Text(
-                            'Date: ${_invitationDetails['date']!}',
+                            'Date: ${_joubjumDetails['date']!}',
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -138,7 +138,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                           ),
                           const Divider(),
                           Text(
-                            'Time: ${_invitationDetails['time']!}',
+                            'Time: ${_joubjumDetails['time']!}',
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -150,7 +150,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Invitees:',
+                                'Going:',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -162,7 +162,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                                 child: Wrap(
                                   spacing: 10.0, // Space between each avatar-name pair
                                   runSpacing: 10.0, // Space between lines if wrapping occurs
-                                  children: _invitationDetails['invitees']
+                                  children: _joubjumDetails['invitees']
                                       .map<Widget>((invitee) => _buildAvatarName(invitee['name'], invitee['image']))
                                       .toList(),
                                 ),
@@ -189,27 +189,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () => Navigator.pop(context, 'accept'),
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 2.0,
-              backgroundColor: Colors.green,
-            ),
-            child: const Text(
-              'Accept',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8.0),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () => Navigator.pop(context, 'accept'),
+            onPressed: () => Navigator.pop(context, 'delete'),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -218,7 +198,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
               backgroundColor: Colors.red,
             ),
             child: const Text(
-              'Reject',
+              'Cancel JoubJum',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
