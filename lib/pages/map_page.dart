@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,7 +11,8 @@ import 'package:joub_jum/pages/menu_bar_pages/friend.dart';
 import 'package:joub_jum/pages/menu_bar_pages/invitation.dart';
 import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
 import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
-
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:joub_jum/widgets/sliding_panel.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -21,15 +23,20 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final Location _locationController = Location();
+  final PanelController _panelController = PanelController();
 
   final Completer<GoogleMapController> _mapController =
   Completer<GoogleMapController>();
 
   LatLng? _selectedP;
   LatLng? _currentP;
-  String? _photoUrl;
+  List? _photoUrl;
+  String? userEmail;
+  String? _placeName;
+
 
   double _buttonBottomPadding = 84;
+  double _sliderMaxHeight = 400;
 
   Map<PolylineId, Polyline> polylines = {};
   late BitmapDescriptor currentLocationMarker;
@@ -37,24 +44,27 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     //TODO setState for Polyline ONLY after they selected a location
-    setCustomMapPin();
     super.initState();
+    setCustomMapPin();
+    getCurrentUserEmail();
     getLocationUpdate().then((_) {
       _cameraToPosition(_currentP!);
     });
   }
+
   void setCustomMapPin() async {
     currentLocationMarker = await BitmapDescriptor.asset(
         ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
         'assets/icons/current_marker.png');
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      drawer: buildDrawer(),
       appBar: appBar(),
+      drawer: SizedBox(width: 300, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
         child: Text("Loading..."),
@@ -102,6 +112,20 @@ class _MapPageState extends State<MapPage> {
           ),
         ),
       ),
+      if (_selectedP != null)
+        SlidingUpPanel(controller: _panelController,
+          maxHeight: _sliderMaxHeight,
+          renderPanelSheet: false,
+          panel: floatingPanel(_photoUrl!, _placeName!),
+          collapsed: floatingCollapsed(),
+          onPanelSlide: (double position) {
+            setState(() {
+              _buttonBottomPadding = 84 + (0.75 * position * _sliderMaxHeight);
+            });
+          },
+
+
+        ),
     ]);
   }
 
@@ -113,19 +137,19 @@ class _MapPageState extends State<MapPage> {
         children: [
           UserAccountsDrawerHeader(
             accountName: Text('User1', style: TextStyle(color: Colors.black,),),
-            accountEmail: Text('user1@gmail.com', style: TextStyle(color: Colors.black)),
+            accountEmail: Text(userEmail!, style: TextStyle(color: Colors.black)),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
-                    'https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8=',
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
+                  'https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8=',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
             decoration: const BoxDecoration(
-              color: menuBarColor
+                color: menuBarColor
             ),
           ),
           ListTile(
@@ -180,7 +204,7 @@ class _MapPageState extends State<MapPage> {
       centerTitle: true,
       leading: Builder(builder: (context) {
         return IconButton(
-          icon: const Icon(Icons.menu_rounded),
+          icon: const Icon(Icons.menu),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -199,7 +223,7 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _cameraToPosition(LatLng pos) async {
     final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 14);
+    CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
     await controller
         .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
   }
@@ -293,10 +317,10 @@ class _MapPageState extends State<MapPage> {
     ));
 
     if (result != null) {
-      Navigator.pop(context);
       setState(() {
         _selectedP = result[0];
         _photoUrl = result[1];
+        _placeName = result[2];
       });
       _cameraToPosition(_selectedP!).then((_) {
         getPolylinePoints().then((coordinate) {
@@ -305,5 +329,13 @@ class _MapPageState extends State<MapPage> {
       });
     }
   }
+  //TODO add username as well
+  Future<void> getCurrentUserEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userEmail = user.email;
+      });
+    }
+  }
 }
-

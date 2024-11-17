@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:joub_jum/components/Different_categories.dart';
 import 'package:joub_jum/components/category_tile.dart';
 import 'package:joub_jum/models/FetchPlaceData.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:joub_jum/models/category_model_cafes.dart';
+import 'package:joub_jum/models/category_model_restaurants.dart';
 
 class RecommendationPage extends StatefulWidget {
   const RecommendationPage({super.key});
