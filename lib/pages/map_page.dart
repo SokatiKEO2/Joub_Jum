@@ -4,6 +4,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/pages/menu_bar_pages/createJoubJum.dart';
 import 'package:location/location.dart';
 import 'package:joub_jum/pages/search_page.dart';
 import 'package:joub_jum/pages/menu_bar_pages/account.dart';
@@ -33,6 +34,7 @@ class _MapPageState extends State<MapPage> {
   List? _photoUrl;
   String? userEmail;
   String? _placeName;
+  String? _placeId;
 
 
   double _buttonBottomPadding = 84;
@@ -100,6 +102,17 @@ class _MapPageState extends State<MapPage> {
 
   Stack buildCurrentLocationButton() {
     return Stack(children: [
+      Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateJoubJumPage(location: _placeName!, placeId: _placeId!,),
+            ),
+          );
+        }, child: Text('Setup Joubjum')),
+      ),
       Align(
         alignment: Alignment.bottomRight,
         child: Padding(
@@ -322,6 +335,7 @@ class _MapPageState extends State<MapPage> {
         _selectedP = result[0];
         _photoUrl = result[1];
         _placeName = result[2];
+        _placeId = result[3];
       });
 
       _cameraToPosition(_selectedP!).then((_) {

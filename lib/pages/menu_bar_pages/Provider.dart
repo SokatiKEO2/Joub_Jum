@@ -53,6 +53,11 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
     notifyListeners();
   }
 
+  void createJoubJum(Map<String, dynamic> joubjum){
+    _joubJums.add(joubjum);
+    notifyListeners();
+  }
+
   void deleteJoubJum(Map<String, dynamic> joubjum){
     _joubJums.remove(joubjum);
     notifyListeners();

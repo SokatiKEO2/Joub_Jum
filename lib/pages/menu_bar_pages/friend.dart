@@ -415,21 +415,17 @@ class _AddFriendPageState extends State<AddFriendPage> {
           ),
         ),
         Expanded(
-          child: !_isTyping
-              ? Center(
+          child: !_isTyping ? Center(
             child: Text(
               'Start typing to search friends',
               style: TextStyle(color: Colors.grey.shade600),
             ),
-          )
-              : _searchResults.isEmpty
-              ? Center(
+          ) : _searchResults.isEmpty ? Center(
             child: Text(
               'No results found',
               style: TextStyle(color: Colors.grey.shade600),
             ),
-          )
-              : ListView.builder(
+          ) : ListView.builder(
             itemCount: _searchResults.length,
             itemBuilder: (context, index) {
               final friend = _searchResults[index];
@@ -439,15 +435,13 @@ class _AddFriendPageState extends State<AddFriendPage> {
                   backgroundImage: NetworkImage(friend['imagePath']!),
                 ),
                 title: Text(friend['name']!),
-                trailing: isRequestSent
-                    ? ElevatedButton(
+                trailing: isRequestSent ? ElevatedButton(
                   onPressed: null, // Disable the button
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade400,
                   ),
                   child: const Text('Request Sent'),
-                )
-                    : ElevatedButton(
+                ) : ElevatedButton(
                   onPressed: () => _onSendRequest(friend),
                   child: const Text('Send Request'),
                 ),

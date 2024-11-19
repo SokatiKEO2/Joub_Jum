@@ -24,7 +24,7 @@ Future<List> fetchPlace(String? placeID) async {
     LatLng selectedLocation = LatLng(lat, lng);
     String placeName = placeDetails['name'];
 
-    List<dynamic> locationAndPhotoData = [selectedLocation, photos, placeName];
+    List<dynamic> locationAndPhotoData = [selectedLocation, photos, placeName, placeID];
     return locationAndPhotoData;
 
   }

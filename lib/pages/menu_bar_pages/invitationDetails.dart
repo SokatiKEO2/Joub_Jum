@@ -36,6 +36,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
         child: Column(
           children: [
             Flexible(
+              fit: FlexFit.loose,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(23),
