@@ -51,6 +51,7 @@ class CategoryTile extends StatelessWidget {
                   Text(
                     category.name,
                     style: const TextStyle(
+                      fontFamily: 'Raritas',
                       fontWeight: FontWeight.w500,
                       color: Colors.black,
                       fontSize: 22,
@@ -60,6 +61,7 @@ class CategoryTile extends StatelessWidget {
                   Text(
                     category.location,
                     style: const TextStyle(
+                      fontFamily: 'Raritas',
                       fontWeight: FontWeight.w200,
                       color: Colors.black,
                       fontSize: 13,

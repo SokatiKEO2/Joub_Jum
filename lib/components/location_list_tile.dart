@@ -18,12 +18,13 @@ class LocationListTile extends StatelessWidget {
       children: [
         ListTile(
           onTap: press,
-          horizontalTitleGap: 0,
+          horizontalTitleGap: 5,
           leading: SvgPicture.asset("assets/icons/location_pin.svg"),
           title: Text(
             location,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontFamily: 'Raritas', fontSize: 20),
           ),
         ),
         const Divider(

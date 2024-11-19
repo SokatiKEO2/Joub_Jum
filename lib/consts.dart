@@ -1,14 +1,19 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:joub_jum/pages/search_page.dart';
 
 const String GOOGLE_MAP_API_KEY = 'AIzaSyBVMeYfW8X9ZsiHk3gn2MO9Tj_FzFoJtUM';
-const Color appBarColor = Color(0x255198255);
-const Color menuBarColor = Color(0xFFcaffbf);
-const Color buttonColor = Color(0xB0FFC6FF);
-const Color boxColor = Color(0xffc8c8c8);
+const Color appBarColor = Color(0xbfc49450);
 
+const Color drawerBottom = Color(0xFFe1d5c9);
+const Color drawerTop = Color(0xFFc49450);
+
+const Color boxColor = Color(0xff262026);
+const Color bodyColor = Color(0xFFf6f6ee);
+
+const Color buttonColor = Color(0xFFf6f6ee);
+
+const Color duskyGreen = Color(0xFF556B2F);
+const Color antiqueColor = Color(0xFFFAEBD7);
 
 void navigateToNextScreen(BuildContext context, Widget targetPage) {
   Navigator.of(context).push(PageRouteBuilder(

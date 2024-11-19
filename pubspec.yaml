@@ -46,6 +46,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.2.0+3
+  provider: ^6.0.5
 
 
 dev_dependencies:
@@ -87,7 +88,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Raritas
+      fonts:
+        - asset: assets/fonts/fonnts.com-Raritas-.otf
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

@@ -4,13 +4,18 @@ import 'package:joub_jum/consts.dart';
 Widget floatingCollapsed() {
   return Container(
     decoration: const BoxDecoration(
-      color: appBarColor,
+      // color: Color(0xFFeddcfe),
+      color: drawerTop,
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
     ),
-    margin: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 0.0),
+    margin: const EdgeInsets.fromLTRB(24.0, 48.0, 24.0, 0.0),
     child: const Center(
-      child: Icon(Icons.arrow_upward),
+      child: Icon(
+        IconData(0xf0532, fontFamily: 'MaterialIcons'),
+        size: 50,
+        color: boxColor,
+      ),
     ),
   );
 }
@@ -18,7 +23,7 @@ Widget floatingCollapsed() {
 Widget floatingPanel(List photoUrl, String placeName) {
   return Container(
     decoration: const BoxDecoration(
-      color: Colors.white,
+      color: bodyColor,
       borderRadius: BorderRadius.all(Radius.circular(24.0)),
       boxShadow: [
         BoxShadow(
@@ -27,7 +32,7 @@ Widget floatingPanel(List photoUrl, String placeName) {
         ),
       ],
     ),
-    margin: const EdgeInsets.all(24.0),
+    margin: const EdgeInsets.fromLTRB(24.0, 48.0, 24.0, 24.0),
     child: Column(
       children: [
         const SizedBox(height: 8),
@@ -36,10 +41,11 @@ Widget floatingPanel(List photoUrl, String placeName) {
           child: Text(
             textAlign: TextAlign.center,
             placeName,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontFamily: 'Raritas'),
           ),
         ),
-        const SizedBox(height: 8),
+        const Divider(height: 8, color: appBarColor),
+        const SizedBox(height: 18),
         pictureSlider(photoUrl),
       ],
     ),
@@ -54,14 +60,12 @@ Widget pictureSlider(List photoUrl) {
     child: ListView.separated(
       itemCount: photoUrl.length,
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       separatorBuilder: (context, index) => const SizedBox(width: 18),
       itemBuilder: (context, index) {
-        return Container(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Image.network(photoUrl[index], fit: BoxFit.cover),
-          ),
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Image.network(photoUrl[index], fit: BoxFit.cover),
         );
       },
     ),

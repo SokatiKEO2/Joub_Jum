@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joub_jum/consts.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key,});
@@ -21,9 +22,9 @@ class _AccountPageState extends State<AccountPage> {
     return AppBar(
       title: const Text(
         'Account',
-        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 25, fontFamily: 'Raritas'),
       ),
-      backgroundColor: const Color(0xFFcaffbf),
+      backgroundColor: appBarColor,
       elevation: 0.0,
       centerTitle: true,
       leading: IconButton(

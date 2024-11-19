@@ -52,12 +52,14 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ],
-        ));
+        ),
+        backgroundColor: bodyColor,
+    );
   }
 
   AppBar buildAppBar() {
     return AppBar(
-        // backgroundColor: appBarColor,
+        backgroundColor: appBarColor,
         elevation: 0,
         title: Container(
           decoration: BoxDecoration(

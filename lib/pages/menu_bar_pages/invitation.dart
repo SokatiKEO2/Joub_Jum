@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
-import 'package:joub_jum/pages/menu_bar_pages/invitationDetails.dart';
+import 'package:joub_jum/pages/menu_bar_pages/invitation_details.dart';
 
 class InvitationPage extends StatefulWidget {
   const InvitationPage({super.key});
@@ -18,6 +18,7 @@ class _InvitationPageState extends State<InvitationPage> {
       "time": "6:00 PM",
       "location": "Ambience Bar",
       "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+      "placeId": "ChIJT17FJIlRCTERKJ2gjPwJf6A",
       "invitees": [
         {"name": "Kati",
           "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
@@ -36,6 +37,7 @@ class _InvitationPageState extends State<InvitationPage> {
       "time": "8:00 PM",
       "location": "Hub",
       "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+      "placeId": "ChIJ3VnQszZRCTER3Wc7W4e2DCw",
       "invitees": {"Pich", "Panha"}
     },
   ];
@@ -51,7 +53,7 @@ class _InvitationPageState extends State<InvitationPage> {
             Expanded(
               child: _invitations.isEmpty ? Center(
                 child: Text(
-                'No new invitations',
+                  'No new invitations',
                   style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
                 ),
               ): ListView.builder(
@@ -111,13 +113,23 @@ class _InvitationPageState extends State<InvitationPage> {
     );
   }
 
-  void _onInvitationTap(Map<String, dynamic> invitation) {
-    Navigator.push(
+  Future<void> _onInvitationTap(Map<String, dynamic> invitation) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => InvitationDetailsPage(invitationDetails: invitation),
       ),
     );
+    if (result == 'accept') {
+      setState(() {
+        _onAcceptPressed(invitation);
+      });
+    }
+    else {
+      setState(() {
+        _onRejectPressed(invitation);
+      });
+    }
   }
 
   Row buildButtons(Map<String, dynamic> invitation) {
@@ -168,12 +180,22 @@ class _InvitationPageState extends State<InvitationPage> {
   }
 
   void _onRejectPressed(Map<String, dynamic> invitation) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Reject invite from ${invitation['user']}'),
+      ),
+    );
     setState(() {
       _invitations.remove(invitation);
     });
   }
 
   void _onAcceptPressed(Map<String, dynamic> invitation) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Accept invite from ${invitation['user']}'),
+      ),
+    );
     setState(() {
       _invitations.remove(invitation);
     });

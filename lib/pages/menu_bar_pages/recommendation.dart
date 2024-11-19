@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:joub_jum/components/Different_categories.dart';
+import 'package:joub_jum/components/different_categories.dart';
 import 'package:joub_jum/components/category_tile.dart';
+import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/models/fetch_place_data.dart';
 
 class RecommendationPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bodyColor,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Padding(
@@ -50,9 +51,9 @@ class _RecommendationPageState extends State<RecommendationPage> {
     return AppBar(
       title: const Text(
         'Recommendations',
-        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 25, fontFamily: 'Raritas'),
       ),
-      backgroundColor: const Color(0xFFcaffbf),
+      backgroundColor: appBarColor,
       elevation: 0.0,
       centerTitle: true,
       leading: IconButton(
@@ -67,7 +68,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
       padding: const EdgeInsets.only(left: 15.0),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+        style: const TextStyle(fontSize: 30, fontFamily: 'Raritas'),
       ),
     );
   }
@@ -85,7 +86,6 @@ class _RecommendationPageState extends State<RecommendationPage> {
             category: categoryList[index],
             onTap: () {
               goToPlace(categoryList[index]);
-              // Define the action when this tile is tapped
             },
           );
         },
