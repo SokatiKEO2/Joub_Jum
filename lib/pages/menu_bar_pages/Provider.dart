@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class InvitationsAndJoubJumsState with ChangeNotifier {
   final List<Map<String, dynamic>> _invitations = [
     {
-      "user": "Samnang",
+      "user": "Kati",
       "date": "03/11/24",
       "time": "6:00 PM",
       "location": "Ambience Bar",

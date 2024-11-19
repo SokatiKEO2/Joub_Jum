@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -30,6 +31,7 @@ class _MapPageState extends State<MapPage> {
   LatLng? _selectedP;
   LatLng? _currentP;
   List? _photoUrl;
+  String? userEmail;
   String? _placeName;
 
 
@@ -44,6 +46,7 @@ class _MapPageState extends State<MapPage> {
     //TODO setState for Polyline ONLY after they selected a location
     super.initState();
     setCustomMapPin();
+    getCurrentUserEmail();
     getLocationUpdate().then((_) {
       _cameraToPosition(_currentP!);
     });
@@ -134,7 +137,7 @@ class _MapPageState extends State<MapPage> {
         children: [
           UserAccountsDrawerHeader(
             accountName: Text('User1', style: TextStyle(color: Colors.black,),),
-            accountEmail: Text("Example@gmail.com", style: TextStyle(color: Colors.black)),
+            accountEmail: Text(userEmail!, style: TextStyle(color: Colors.black)),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
@@ -320,10 +323,20 @@ class _MapPageState extends State<MapPage> {
         _photoUrl = result[1];
         _placeName = result[2];
       });
+
       _cameraToPosition(_selectedP!).then((_) {
         getPolylinePoints().then((coordinate) {
           generatePolylineFromPoints(coordinate);
         });
+      });
+    }
+  }
+  //TODO add username as well
+  Future<void> getCurrentUserEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        userEmail = user.email;
       });
     }
   }
