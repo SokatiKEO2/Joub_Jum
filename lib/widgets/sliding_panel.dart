@@ -34,7 +34,8 @@ Widget floatingPanel(List photoUrl, String placeName) {
         Container(
           padding: const EdgeInsets.all(8.0), // Optional padding
           child: Text(
-            placeName, // Example title
+            textAlign: TextAlign.center,
+            placeName,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
@@ -66,15 +67,3 @@ Widget pictureSlider(List photoUrl) {
     ),
   );
 }
-
-
-
-//
-// borderRadius: BorderRadius.circular(24),
-// child: SizedBox.fromSize(
-// size: Size.fromRadius(48),
-// child: Image.network(
-// photoUrl[index],
-// fit: BoxFit.cover,
-// ),
-// ),

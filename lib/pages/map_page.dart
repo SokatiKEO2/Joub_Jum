@@ -24,6 +24,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final Location _locationController = Location();
   final PanelController _panelController = PanelController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final Completer<GoogleMapController> _mapController =
   Completer<GoogleMapController>();
@@ -52,16 +53,11 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  void setCustomMapPin() async {
-    currentLocationMarker = await BitmapDescriptor.asset(
-        ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
-        'assets/icons/current_marker.png');
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       extendBodyBehindAppBar: true,
       appBar: appBar(),
       drawer: SizedBox(width: 300, child: buildDrawer()),
@@ -322,6 +318,8 @@ class _MapPageState extends State<MapPage> {
         _photoUrl = result[1];
         _placeName = result[2];
       });
+      if (_scaffoldKey.currentState!.isDrawerOpen) {
+        Navigator.of(context).pop();}
       _cameraToPosition(_selectedP!).then((_) {
         getPolylinePoints().then((coordinate) {
           generatePolylineFromPoints(coordinate);
@@ -329,6 +327,7 @@ class _MapPageState extends State<MapPage> {
       });
     }
   }
+
   //TODO add username as well
   Future<void> getCurrentUserEmail() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -337,5 +336,11 @@ class _MapPageState extends State<MapPage> {
         userEmail = user.email;
       });
     }
+  }
+
+  void setCustomMapPin() async {
+    currentLocationMarker = await BitmapDescriptor.asset(
+        const ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
+        'assets/icons/current_marker.png');
   }
 }
