@@ -15,8 +15,6 @@ import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:joub_jum/widgets/sliding_panel.dart';
 
-import 'menu_bar_pages/createJoubJum.dart';
-
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
@@ -37,9 +35,11 @@ class _MapPageState extends State<MapPage> {
   List? _photoUrl;
   String? userEmail;
   String? _placeName;
-  String? _placeId;
   double _buttonBottomPadding = 84;
+
+  String? _placeID;
   late double _sliderMaxHeight;
+
 
   Map<PolylineId, Polyline> polylines = {};
   late BitmapDescriptor currentLocationMarker;
@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     setState(() {
-      _sliderMaxHeight = screenHeight / 1.5;
+      _sliderMaxHeight = screenHeight/1.5;
     });
     return Scaffold(
       key: _scaffoldKey,
@@ -102,17 +102,6 @@ class _MapPageState extends State<MapPage> {
   Stack buildCurrentLocationButton() {
     return Stack(children: [
       Align(
-        alignment: Alignment.centerRight,
-        child: ElevatedButton(onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateJoubJumPage(location: _placeName!, placeId: _placeId!,),
-            ),
-          );
-        }, child: Text('Setup Joubjum')),
-      ),
-      Align(
         alignment: Alignment.bottomRight,
         child: Padding(
           padding: EdgeInsets.only(bottom: _buttonBottomPadding, right: 25),
@@ -131,7 +120,7 @@ class _MapPageState extends State<MapPage> {
           controller: _panelController,
           maxHeight: _sliderMaxHeight,
           renderPanelSheet: false,
-          panel: floatingPanel(_photoUrl!, _placeName!),
+          panel: floatingPanel(_photoUrl!, _placeName!, _placeID!),
           collapsed: floatingCollapsed(),
           onPanelSlide: (double position) {
             setState(() {
@@ -353,6 +342,7 @@ class _MapPageState extends State<MapPage> {
         _selectedP = result[0];
         _photoUrl = result[1];
         _placeName = result[2];
+        _placeID = result[3];
       });
       if (_scaffoldKey.currentState!.isDrawerOpen) {
         Navigator.of(context).pop();

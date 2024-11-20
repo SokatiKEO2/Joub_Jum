@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/menu_bar_pages/invitation_details.dart';
+import 'package:joub_jum/pages/menu_bar_pages/Provider.dart';
+import 'package:provider/provider.dart';
 
 class InvitationPage extends StatefulWidget {
   const InvitationPage({super.key});
@@ -11,56 +13,27 @@ class InvitationPage extends StatefulWidget {
 
 class _InvitationPageState extends State<InvitationPage> {
 
-  final List<Map<String, dynamic>> _invitations = [
-    {
-      "user": "Samnang",
-      "date": "03/11/24",
-      "time": "6:00 PM",
-      "location": "Ambience Bar",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-      "placeId": "ChIJT17FJIlRCTERKJ2gjPwJf6A",
-      "invitees": [
-        {"name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        },
-        {"name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        },
-        {"name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-        }
-      ]
-    },
-    {
-      "user": "Panha",
-      "date": "04/11/24",
-      "time": "8:00 PM",
-      "location": "Hub",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
-      "placeId": "ChIJ3VnQszZRCTER3Wc7W4e2DCw",
-      "invitees": {"Pich", "Panha"}
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final invitationAndJoubJumState = Provider.of<InvitationsAndJoubJumsState>(context);
+    final invitations = invitationAndJoubJumState.invitations;
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: bodyColor,
         appBar: _buildAppBar(),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: _invitations.isEmpty ? Center(
+              child: invitations.isEmpty ? Center(
                 child: Text(
-                  'No new invitations',
+                'No new invitations',
                   style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
                 ),
               ): ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-                itemCount: _invitations.length,
+                itemCount: invitations.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return buildInvitations(_invitations[index]);
+                  return buildInvitations(invitations[index]);
                 },
               ),
             ),
@@ -77,7 +50,7 @@ class _InvitationPageState extends State<InvitationPage> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: buttonColor,
+            color: boxColor,
           ),
           padding: const EdgeInsets.all(12.0),
           child: Row(
@@ -98,11 +71,7 @@ class _InvitationPageState extends State<InvitationPage> {
               Expanded(
                 child: Text(
                   '${invitation['user']} sent an invite',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 20, fontFamily: 'Raritas', color: bodyColor),
                 ),
               ),
               buildButtons(invitation),
@@ -125,7 +94,7 @@ class _InvitationPageState extends State<InvitationPage> {
         _onAcceptPressed(invitation);
       });
     }
-    else {
+    else if (result == 'reject'){
       setState(() {
         _onRejectPressed(invitation);
       });
@@ -186,7 +155,7 @@ class _InvitationPageState extends State<InvitationPage> {
       ),
     );
     setState(() {
-      _invitations.remove(invitation);
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false).rejectInvitation(invitation);
     });
   }
 
@@ -197,7 +166,7 @@ class _InvitationPageState extends State<InvitationPage> {
       ),
     );
     setState(() {
-      _invitations.remove(invitation);
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false).acceptInvitation(invitation);
     });
   }
 
@@ -205,9 +174,9 @@ class _InvitationPageState extends State<InvitationPage> {
     return AppBar(
       title: const Text(
         'Invitations',
-        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 25, fontFamily: 'Raritas'),
       ),
-      backgroundColor: const Color(0xFFcaffbf),
+      backgroundColor: appBarColor,
       elevation: 0.0,
       centerTitle: true,
       leading: IconButton(

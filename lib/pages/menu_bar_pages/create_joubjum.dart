@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'Provider.dart';
 
 class CreateJoubJumPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
 
   late Map<String, dynamic> setUpJoubJum;
 
+  //TODO Friend backends
   final List<Map<String, String>> _allFriends = [
     {"name": "Channa", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
     {"name": "Sokly", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
@@ -153,6 +155,7 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
+                                        fontFamily: "Raritas"
                                       ),
                                     ),
                                     const SizedBox(width: 8.0),
@@ -222,8 +225,8 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text(
-        'JoubJum Details',
-        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        'JoubJum Detail',
+        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
       ),
       backgroundColor: const Color(0xFFC49551),
       elevation: 0.0,

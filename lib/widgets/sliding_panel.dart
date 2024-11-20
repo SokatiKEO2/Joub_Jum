@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/pages/menu_bar_pages/create_joubjum.dart';
 
 Widget floatingCollapsed() {
   return Container(
@@ -20,7 +21,7 @@ Widget floatingCollapsed() {
   );
 }
 
-Widget floatingPanel(List photoUrl, String placeName) {
+Widget floatingPanel(List photoUrl, String placeName, String placeID) {
   return Container(
     decoration: const BoxDecoration(
       color: bodyColor,
@@ -47,11 +48,29 @@ Widget floatingPanel(List photoUrl, String placeName) {
         const Divider(height: 8, color: appBarColor),
         const SizedBox(height: 18),
         pictureSlider(photoUrl),
+        JoubJumButton(placeName: placeName, placeID: placeID,)
       ],
     ),
   );
 }
 
+class JoubJumButton extends StatelessWidget {
+  final String placeName;
+  final String placeID;
+
+  const JoubJumButton({
+    super.key, required this.placeID, required this.placeName
+   });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        navigateToNextScreen(context, CreateJoubJumPage(location: placeName, placeId: placeID));
+      },
+      child: const Text("+ JoubJum"),);
+  }
+}
 
 Widget pictureSlider(List photoUrl) {
   return Container(

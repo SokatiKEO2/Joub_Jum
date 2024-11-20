@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
+import '../../models/fetch_place_data.dart';
 
 class InvitationDetailsPage extends StatefulWidget {
-
   final Map<String, dynamic> invitationDetails;
+
   const InvitationDetailsPage({super.key, required this.invitationDetails});
 
   @override
@@ -13,8 +14,14 @@ class InvitationDetailsPage extends StatefulWidget {
 class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   late Map<String, dynamic> _invitationDetails;
 
+  void goToPlace(Map<String, dynamic> invitation) {
+    var result = fetchPlace(invitation['placeId']);
+    Navigator.pop(context);
+    Navigator.pop(context, result);
+  }
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _invitationDetails = widget.invitationDetails;
   }
@@ -22,7 +29,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bodyColor,
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -32,29 +39,30 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(23),
-                  color: buttonColor,
+                  color: drawerTop,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(13.0),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: drawerTop,
+                      color: drawerBottom,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min, // Adjusts height to fit contents
+                        mainAxisSize: MainAxisSize.min,
+                        // Adjusts height to fit contents
                         children: [
                           Row(
                             children: [
                               const Text(
-                                'From:',
+                                'Created by:',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: boxColor,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Raritas",
                                 ),
                               ),
                               const SizedBox(width: 10.0),
@@ -74,9 +82,9 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                               Text(
                                 _invitationDetails['user']!,
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: boxColor,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Raritas",
                                 ),
                               ),
                             ],
@@ -88,19 +96,23 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                                 child: Text(
                                   'Location: ${_invitationDetails['location']!}',
                                   style: const TextStyle(
-                                    color: Colors.black,
+                                    color: boxColor,
                                     fontSize: 20,
-                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Raritas",
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(width: 5.0,),
+                              const SizedBox(
+                                width: 5.0,
+                              ),
                               SizedBox(
                                 width: 40,
                                 height: 40,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    goToPlace(_invitationDetails);
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.zero,
                                     shape: const CircleBorder(),
@@ -122,18 +134,18 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                           Text(
                             'Date: ${_invitationDetails['date']!}',
                             style: const TextStyle(
-                              color: Colors.black,
+                              color: boxColor,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontFamily: "Raritas",
                             ),
                           ),
                           const Divider(),
                           Text(
                             'Time: ${_invitationDetails['time']!}',
                             style: const TextStyle(
-                              color: Colors.black,
+                              color: boxColor,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontFamily: "Raritas",
                             ),
                           ),
                           const Divider(),
@@ -141,20 +153,25 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Invitees:',
+                                'Going:',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: boxColor,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Raritas",
                                 ),
                               ),
-                              const SizedBox(width: 8.0), // Space between "Going:" label and avatars
+                              const SizedBox(width: 8.0),
+                              // Space between "Going:" label and avatars
                               Expanded(
                                 child: Wrap(
-                                  spacing: 10.0, // Space between each avatar-name pair
-                                  runSpacing: 10.0, // Space between lines if wrapping occurs
+                                  spacing: 10.0,
+                                  // Space between each avatar-name pair
+                                  runSpacing: 10.0,
+                                  // Space between lines if wrapping occurs
                                   children: _invitationDetails['invitees']
-                                      .map<Widget>((invitee) => _buildAvatarName(invitee['name'], invitee['image']))
+                                      .map<Widget>((invitee) =>
+                                          _buildAvatarName(invitee['name'],
+                                              invitee['image']))
                                       .toList(),
                                 ),
                               ),
@@ -180,7 +197,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () => Navigator.pop(context, 'accept'),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -200,7 +217,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
         const SizedBox(width: 8.0),
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () => Navigator.pop(context, 'reject'),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -243,7 +260,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
           style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
-            fontWeight: FontWeight.w600,
+            fontFamily: "Raritas"
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -254,10 +271,10 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text(
-        'Account',
-        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        'Invitation Detail',
+        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
       ),
-      backgroundColor: const Color(0xFFcaffbf),
+      backgroundColor: appBarColor,
       elevation: 0.0,
       centerTitle: true,
       leading: IconButton(

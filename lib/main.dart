@@ -4,14 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:joub_jum/firebase_options.dart';
 import 'package:joub_jum/pages/auth_pages/register_screen.dart';
 import 'package:joub_jum/pages/map_page.dart';
+import 'package:joub_jum/pages/menu_bar_pages/Provider.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => InvitationsAndJoubJumsState(),
+      child: const MyApp(),
+    ),
+  );
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -21,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Starter Template',
+      navigatorKey: navigatorKey,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),

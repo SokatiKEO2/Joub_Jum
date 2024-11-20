@@ -10,8 +10,6 @@ const Color drawerTop = Color(0xFFc49450);
 const Color boxColor = Color(0xff262026);
 const Color bodyColor = Color(0xFFf6f6ee);
 
-const Color buttonColor = Color(0xFFf6f6ee);
-
 const Color duskyGreen = Color(0xFF556B2F);
 const Color antiqueColor = Color(0xFFFAEBD7);
 

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:joub_jum/models/fetch_place_data.dart';
-
-import '../../consts.dart';
+import 'package:joub_jum/consts.dart';
+import '../../models/fetch_place_data.dart';
 
 class JoubJumDetailsPage extends StatefulWidget {
-
   final Map<String, dynamic> joubjumDetails;
+
   const JoubJumDetailsPage({super.key, required this.joubjumDetails});
 
   @override
@@ -22,7 +21,7 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _joubjumDetails = widget.joubjumDetails;
   }
@@ -30,7 +29,7 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bodyColor,
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -40,29 +39,30 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(23),
-                  color: buttonColor,
+                  color: drawerTop,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(13.0),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: drawerTop,
+                      color: drawerBottom,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min, // Adjusts height to fit contents
+                        mainAxisSize: MainAxisSize.min,
+                        // Adjusts height to fit contents
                         children: [
                           Row(
                             children: [
                               const Text(
                                 'Created by:',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: boxColor,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Raritas",
                                 ),
                               ),
                               const SizedBox(width: 10.0),
@@ -82,9 +82,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                               Text(
                                 _joubjumDetails['user']!,
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: boxColor,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Raritas",
                                 ),
                               ),
                             ],
@@ -96,14 +96,16 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                                 child: Text(
                                   'Location: ${_joubjumDetails['location']!}',
                                   style: const TextStyle(
-                                    color: Colors.black,
+                                    color: boxColor,
                                     fontSize: 20,
-                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Raritas",
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(width: 5.0,),
+                              const SizedBox(
+                                width: 5.0,
+                              ),
                               SizedBox(
                                 width: 40,
                                 height: 40,
@@ -132,18 +134,18 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                           Text(
                             'Date: ${_joubjumDetails['date']!}',
                             style: const TextStyle(
-                              color: Colors.black,
+                              color: boxColor,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontFamily: "Raritas",
                             ),
                           ),
                           const Divider(),
                           Text(
                             'Time: ${_joubjumDetails['time']!}',
                             style: const TextStyle(
-                              color: Colors.black,
+                              color: boxColor,
                               fontSize: 20,
-                              fontWeight: FontWeight.w600,
+                              fontFamily: "Raritas",
                             ),
                           ),
                           const Divider(),
@@ -153,18 +155,23 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                               const Text(
                                 'Going:',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: boxColor,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  fontFamily: "Raritas",
                                 ),
                               ),
-                              const SizedBox(width: 8.0), // Space between "Going:" label and avatars
+                              const SizedBox(width: 8.0),
+                              // Space between "Going:" label and avatars
                               Expanded(
                                 child: Wrap(
-                                  spacing: 10.0, // Space between each avatar-name pair
-                                  runSpacing: 10.0, // Space between lines if wrapping occurs
+                                  spacing: 10.0,
+                                  // Space between each avatar-name pair
+                                  runSpacing: 10.0,
+                                  // Space between lines if wrapping occurs
                                   children: _joubjumDetails['invitees']
-                                      .map<Widget>((invitee) => _buildAvatarName(invitee['name'], invitee['image']))
+                                      .map<Widget>((invitee) =>
+                                          _buildAvatarName(invitee['name'],
+                                              invitee['image']))
                                       .toList(),
                                 ),
                               ),
@@ -202,7 +209,8 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
               'Cancel JoubJum',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 20,
+                fontFamily: "Raritas",
               ),
             ),
           ),
@@ -231,9 +239,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
         Text(
           name,
           style: const TextStyle(
-            color: Colors.black,
+            color: boxColor,
             fontSize: 20,
-            fontWeight: FontWeight.w600,
+            fontFamily: "Raritas",
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -244,10 +252,10 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text(
-        'Account',
-        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+        'JoubJum Detail',
+        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
       ),
-      backgroundColor: const Color(0xFFcaffbf),
+      backgroundColor: appBarColor,
       elevation: 0.0,
       centerTitle: true,
       leading: IconButton(
