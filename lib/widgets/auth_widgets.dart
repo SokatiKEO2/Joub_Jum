@@ -26,7 +26,7 @@ class RegisterText extends StatelessWidget {
       style: TextStyle(
         color: Colors.black,
         fontSize: 30,
-        fontWeight: FontWeight.w600,
+        fontFamily: "Raritas"
       ),
     );
   }

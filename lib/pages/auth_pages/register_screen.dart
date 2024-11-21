@@ -43,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      backgroundColor: bodyColor,
       body: SingleChildScrollView( // Wrap the body in a SingleChildScrollView
         padding: const EdgeInsets.symmetric(horizontal: 25.0), // Padding for better layout
         child: Column(
@@ -89,16 +89,14 @@ class ContinueButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        backgroundColor: appBarColor,
+        foregroundColor: bodyColor,
       ),
       child: const Text(
         'Continue',
         style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
+          fontFamily: "Raritas",
+          fontSize: 20,
         ),
       ),
     );

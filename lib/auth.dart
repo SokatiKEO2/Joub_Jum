@@ -31,7 +31,7 @@ class AuthService {
         textColor: Colors.white,
         fontSize: 14.0,
       );
-    } catch (e) {}
+    }
   }
 
   Future<void> signin(
@@ -54,11 +54,11 @@ class AuthService {
         msg: message,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
+        backgroundColor: appBarColor,
+        textColor: bodyColor,
+        fontSize: 18.0,
       );
-    } catch (e) {}
+    }
   }
 
   Future<void> signout({required BuildContext context}) async {

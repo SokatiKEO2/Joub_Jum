@@ -4,6 +4,7 @@ import 'package:joub_jum/pages/auth_pages/register_screen.dart';
 import 'package:joub_jum/widgets/auth_widgets.dart';
 
 import '../../consts.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.white,
+      backgroundColor: bodyColor,
       body: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
         padding: const EdgeInsets.symmetric(horizontal: 25.0), // Optional padding for aesthetics
         child: Column(
@@ -91,7 +92,7 @@ class LoginText extends StatelessWidget {
       style: TextStyle(
         color: Colors.black,
         fontSize: 30,
-        fontWeight: FontWeight.w600,
+        fontFamily: "Raritas",
       ),
     );
   }
@@ -107,16 +108,14 @@ class LoginButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        backgroundColor: appBarColor,
+        foregroundColor: bodyColor
       ),
       child: const Text(
-        'LOGIN',
+        'Login',
         style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
+          fontFamily: "Raritas",
+          fontSize: 20,
         ),
       ),
     );
@@ -128,9 +127,14 @@ class ForgotPasswordText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Forgot password?',
-      style: TextStyle(color: Colors.blue),
+    return GestureDetector(
+      onTap: (){
+        navigateToNextScreen(context, ForgotPasswordPage());
+      },
+      child: const Text(
+        'Forgot password?',
+        style: TextStyle(color: Colors.blue),
+      ),
     );
   }
 }
