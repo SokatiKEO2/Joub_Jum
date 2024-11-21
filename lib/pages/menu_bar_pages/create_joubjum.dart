@@ -145,10 +145,9 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                       : null,
                                   onSaved: (value) => setUpJoubJum['time'] = value ?? '',
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 8),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'Invitees:',
@@ -161,6 +160,7 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                     const SizedBox(width: 8.0),
                                     Expanded(
                                       child: Wrap(
+                                        alignment: WrapAlignment.start,
                                         spacing: 10.0,
                                         runSpacing: 10.0,
                                         children: [
@@ -168,24 +168,35 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                               .map((invitee) =>
                                               _buildAvatarName(invitee['name']!, invitee['imagePath']!))
                                               .toList(),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              final selectedFriend = await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (_) => FriendSelectionPage(friends: _allFriends),
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                                height: 30,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    final selectedFriend = await Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (_) => FriendSelectionPage(friends: _allFriends),
+                                                      ),
+                                                    );
+                                                    if (selectedFriend != null) {
+                                                      _addInvitee(selectedFriend);
+                                                    }
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    shape: const CircleBorder(),
+                                                    backgroundColor: const Color(0xFFC49551),
+                                                    padding: EdgeInsets.zero,
+                                                  ),
+                                                  child: const Icon(Icons.add, size: 15, color: Colors.white,),
                                                 ),
-                                              );
-                                              if (selectedFriend != null) {
-                                                _addInvitee(selectedFriend);
-                                              }
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              shape: const CircleBorder(),
-                                              backgroundColor: const Color(0xFFC49551),
-                                              minimumSize: const Size(30, 30),
-                                            ),
-                                            child: const Icon(Icons.add, size: 15, color: Colors.white,),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),

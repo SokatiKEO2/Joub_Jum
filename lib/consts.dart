@@ -13,6 +13,8 @@ const Color bodyColor = Color(0xFFf6f6ee);
 const Color duskyGreen = Color(0xFF556B2F);
 const Color antiqueColor = Color(0xFFFAEBD7);
 
+
+
 void navigateToNextScreen(BuildContext context, Widget targetPage) {
   Navigator.of(context).push(PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => targetPage,

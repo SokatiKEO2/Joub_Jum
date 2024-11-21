@@ -19,7 +19,13 @@ class _FriendPageState extends State<FriendPage> {
     {"name": "Keameng", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
     {"name": "Youhorng", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
   ];
-  final List<Map<String, String>> _requests = [
+  final List<Map<String, String>> _requests = [];
+
+  final List<Map<String, String>> _allFriends = [
+    {"name": "Channa", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Sokly", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Rathana", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {"name": "Makara", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
     {"name": "Samnang", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
     {"name": "Panha", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
     {"name": "Sokun", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
@@ -31,16 +37,9 @@ class _FriendPageState extends State<FriendPage> {
     });
   }
 
-  void _acceptRequest(Map<String, String> request) {
+  void _sendRequest(Map<String, String> friend) {
     setState(() {
-      _friends.add(request);
-      _requests.remove(request);
-    });
-  }
-
-  void _rejectRequest(Map<String, String> request) {
-    setState(() {
-      _requests.remove(request);
+      _requests.add(friend);
     });
   }
 
@@ -50,9 +49,39 @@ class _FriendPageState extends State<FriendPage> {
   void initState() {
     super.initState();
     _pages = [
-      FriendListPage(friends: _friends),
+      FriendListPage(friends: _friends, onTapFriend: _showSnackBar),
       RequestPage(requests: _requests, accept: _acceptRequest, reject: _rejectRequest),
+      AddFriendPage(
+        allFriends: _allFriends,
+        requests: _requests,
+        onSendRequest: _sendRequest,
+      ),
     ];
+  }
+
+  void _acceptRequest(Map<String, String> request) {
+    setState(() {
+      _friends.add(request);
+      _requests.remove(request);
+
+      // Remove from _allFriends if present
+      _allFriends.removeWhere((friend) => friend['name'] == request['name']);
+    });
+
+  }
+
+  void _rejectRequest(Map<String, String> request) {
+    setState(() {
+      _requests.remove(request);
+    });
+  }
+
+  void _showSnackBar(String userName) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Tapped on $userName'),
+      ),
+    );
   }
 
   @override
@@ -65,6 +94,7 @@ class _FriendPageState extends State<FriendPage> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.people_alt_rounded), label: 'Friends'),
           BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1_rounded), label: 'Requests'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_search_rounded), label: 'Add Friend'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -76,7 +106,7 @@ class _FriendPageState extends State<FriendPage> {
     return AppBar(
       title: const Text(
         'Friends',
-        style: TextStyle(fontSize: 25, fontFamily: 'Raritas')
+        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
       ),
       backgroundColor: appBarColor,
       elevation: 0.0,
@@ -95,7 +125,7 @@ Padding buildHeader(String header) {
     child: Text(
       header,
       style: const TextStyle(
-        fontSize: 25, fontFamily: 'Raritas'
+        fontSize: 25, fontFamily: "Raritas",
       ),
     ),
   );
@@ -104,8 +134,9 @@ Padding buildHeader(String header) {
 // FriendListPage with updated structure to display friends' images and names
 class FriendListPage extends StatelessWidget {
   final List<Map<String, String>> friends;
+  final Function(String) onTapFriend;
 
-  const FriendListPage({super.key, required this.friends});
+  const FriendListPage({super.key, required this.friends, required this.onTapFriend});
 
   @override
   Widget build(BuildContext context) {
@@ -129,32 +160,40 @@ class FriendListPage extends StatelessWidget {
   Widget _buildFriendTile(Map<String, String> friend) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: boxColor,
-        ),
-        padding: const EdgeInsets.only(left: 12.0, right: 8.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30.0,
-              backgroundColor: Colors.transparent,
-              child: ClipOval(
-                child: Image.network(
-                  friend['imagePath']!,
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
+      child: GestureDetector(
+        onTap: () => onTapFriend(friend['name']!),
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: boxColor,
+          ),
+          padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30.0,
+                backgroundColor: Colors.transparent,
+                child: ClipOval(
+                  child: Image.network(
+                    friend['imagePath']!,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              friend['name']!,style: TextStyle(fontSize: 20, fontFamily: 'Raritas', color: bodyColor),
-            ),
-          ],
+              const SizedBox(width: 10.0),
+              Text(
+                friend['name']!,
+                style: const TextStyle(
+                  color: bodyColor,
+                  fontSize: 20,
+                  fontFamily: "Raritas"
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -230,7 +269,11 @@ class _RequestPageState extends State<RequestPage> {
                 children: [
                   Text(
                     request['name']!,
-                    style: TextStyle(fontSize: 20, fontFamily: 'Raritas', color: bodyColor),
+                    style: const TextStyle(
+                        color: bodyColor,
+                        fontSize: 23,
+                        fontFamily: "Raritas"
+                    ),
                   ),
                   const SizedBox(height: 8.0),
                   buildButtons(request),
@@ -293,5 +336,132 @@ class _RequestPageState extends State<RequestPage> {
         ),
       ],
     );
+  }
+}
+
+class AddFriendPage extends StatefulWidget {
+  final List<Map<String, String>> allFriends;
+  final List<Map<String, String>> requests;
+  final Function(Map<String, String>) onSendRequest;
+
+  const AddFriendPage({
+    super.key,
+    required this.allFriends,
+    required this.requests,
+    required this.onSendRequest,
+  });
+
+  @override
+  State<AddFriendPage> createState() => _AddFriendPageState();
+}
+
+class _AddFriendPageState extends State<AddFriendPage> {
+  late final TextEditingController _searchController;
+  List<Map<String, String>> _searchResults = [];
+  bool _isTyping = false; // Indicates if the user is typing in the search bar.
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    _searchController.addListener(_updateSearchResults);
+  }
+
+  void _updateSearchResults() {
+    setState(() {
+      _isTyping = _searchController.text.isNotEmpty;
+      if (_isTyping) {
+        _searchResults = widget.allFriends
+            .where((friend) => friend['name']!
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase()))
+            .toList();
+      } else {
+        _searchResults = [];
+      }
+    });
+  }
+
+  bool _isRequestSent(String name) {
+    return widget.requests.any((request) => request['name'] == name);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search friends...',
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0)
+              ),
+              prefixIcon: const Icon(Icons.search),
+            ),
+            onTap: () {
+              setState(() {
+                _isTyping = false; // Do not show results until typing starts
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: !_isTyping ? Center(
+            child: Text(
+              'Start typing to search friends',
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+          ) : _searchResults.isEmpty ? Center(
+            child: Text(
+              'No results found',
+              style: TextStyle(color: Colors.grey.shade600),
+            ),
+          ) : ListView.builder(
+            itemCount: _searchResults.length,
+            itemBuilder: (context, index) {
+              final friend = _searchResults[index];
+              final isRequestSent = _isRequestSent(friend['name']!);
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(friend['imagePath']!),
+                ),
+                title: Text(friend['name']!),
+                trailing: isRequestSent ? ElevatedButton(
+                  onPressed: null, // Disable the button
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade400,
+                  ),
+                  child: const Text('Request Sent'),
+                ) : ElevatedButton(
+                  onPressed: () => _onSendRequest(friend),
+                  child: const Text('Send Request'),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onSendRequest(Map<String, String> friend) {
+    widget.onSendRequest(friend);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Request sent to ${friend['name']}')),
+    );
+
+    setState(() {
+      _searchController.clear(); // Clear the search bar
+    });
   }
 }

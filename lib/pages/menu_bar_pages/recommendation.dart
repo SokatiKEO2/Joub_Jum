@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:joub_jum/components/Different_categories.dart';
+import 'package:joub_jum/components/different_categories.dart';
 import 'package:joub_jum/components/category_tile.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/models/fetch_place_data.dart';

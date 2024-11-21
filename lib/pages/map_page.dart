@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final Location _locationController = Location();
   final PanelController _panelController = PanelController();
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -36,10 +35,11 @@ class _MapPageState extends State<MapPage> {
   String? userEmail;
   String? _placeName;
   double _buttonBottomPadding = 84;
+  bool polylineDirection = false;
+
 
   String? _placeID;
   late double _sliderMaxHeight;
-
 
   Map<PolylineId, Polyline> polylines = {};
   late BitmapDescriptor currentLocationMarker;
@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     setState(() {
-      _sliderMaxHeight = screenHeight/1.5;
+      _sliderMaxHeight = screenHeight / 1.5;
     });
     return Scaffold(
       key: _scaffoldKey,
@@ -120,7 +120,8 @@ class _MapPageState extends State<MapPage> {
           controller: _panelController,
           maxHeight: _sliderMaxHeight,
           renderPanelSheet: false,
-          panel: floatingPanel(_photoUrl!, _placeName!, _placeID!),
+          panel: floatingPanel(
+              _photoUrl!, _placeName!, _placeID!, directionButton()),
           collapsed: floatingCollapsed(),
           onPanelSlide: (double position) {
             setState(() {
@@ -347,11 +348,12 @@ class _MapPageState extends State<MapPage> {
       if (_scaffoldKey.currentState!.isDrawerOpen) {
         Navigator.of(context).pop();
       }
-      _cameraToPosition(_selectedP!).then((_) {
+      _cameraToPosition(_selectedP!);
+      if (polylineDirection ) {
         getPolylinePoints().then((coordinate) {
           generatePolylineFromPoints(coordinate);
         });
-      });
+      }
     }
   }
 
@@ -364,6 +366,23 @@ class _MapPageState extends State<MapPage> {
       });
     }
   }
+
+  ElevatedButton directionButton() => ElevatedButton(
+        onPressed: () {
+            setState(() {
+              polylineDirection = true;
+            });
+          getPolylinePoints().then((coordinate) {
+            generatePolylineFromPoints(coordinate);
+          });
+          _panelController.close();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: appBarColor,
+          foregroundColor: bodyColor,
+        ),
+        child: const Text("Direction"),
+      );
 
   void setCustomMapPin() async {
     currentLocationMarker = await BitmapDescriptor.asset(

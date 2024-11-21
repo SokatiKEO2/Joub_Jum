@@ -21,7 +21,7 @@ Widget floatingCollapsed() {
   );
 }
 
-Widget floatingPanel(List photoUrl, String placeName, String placeID) {
+Widget floatingPanel(List photoUrl, String placeName, String placeID, ElevatedButton directionButton) {
   return Container(
     decoration: const BoxDecoration(
       color: bodyColor,
@@ -38,7 +38,7 @@ Widget floatingPanel(List photoUrl, String placeName, String placeID) {
       children: [
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.all(8.0), // Optional padding
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             textAlign: TextAlign.center,
             placeName,
@@ -48,27 +48,62 @@ Widget floatingPanel(List photoUrl, String placeName, String placeID) {
         const Divider(height: 8, color: appBarColor),
         const SizedBox(height: 18),
         pictureSlider(photoUrl),
-        JoubJumButton(placeName: placeName, placeID: placeID,)
+        const DescriptionBox(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(child: directionButton),
+              const SizedBox(width: 10),
+              Expanded(
+                child: JoubJumButton(
+                  placeName: placeName,
+                  placeID: placeID,
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     ),
   );
+}
+
+
+class DescriptionBox extends StatelessWidget {
+  const DescriptionBox({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Expanded(
+      child: Text("data"),
+    );
+  }
 }
 
 class JoubJumButton extends StatelessWidget {
   final String placeName;
   final String placeID;
 
-  const JoubJumButton({
-    super.key, required this.placeID, required this.placeName
-   });
+  const JoubJumButton(
+      {super.key, required this.placeID, required this.placeName});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: appBarColor,
+        foregroundColor: bodyColor,
+      ),
       onPressed: () {
-        navigateToNextScreen(context, CreateJoubJumPage(location: placeName, placeId: placeID));
+        navigateToNextScreen(
+            context, CreateJoubJumPage(location: placeName, placeId: placeID))
+        ;
       },
-      child: const Text("+ JoubJum"),);
+      child: const Text("+ JoubJum"),
+    );
   }
 }
 
