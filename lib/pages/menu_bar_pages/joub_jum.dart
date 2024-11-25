@@ -79,7 +79,7 @@ class _JoubJumPageState extends State<JoubJumPage> {
                           Expanded(
                             child: Text(
                               'JoubJum with ${joubjum['user']}',
-                              style: TextStyle(fontSize: 20, fontFamily: 'Raritas', color: bodyColor),
+                              style: TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
                             ),
                           ),
                         ],
@@ -138,7 +138,7 @@ class _JoubJumPageState extends State<JoubJumPage> {
     return AppBar(
       title: const Text(
         'JoubJums',
-        style: TextStyle(fontSize: 25, fontFamily: 'Raritas'),
+        style: TextStyle(fontSize: 25, fontFamily: mainFont),
       ),
       backgroundColor: appBarColor,
       elevation: 0.0,

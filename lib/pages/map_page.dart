@@ -59,7 +59,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     setState(() {
-      _sliderMaxHeight = screenHeight / 1.5;
+      _sliderMaxHeight = screenHeight / 2;
     });
     return Scaffold(
       key: _scaffoldKey,
@@ -123,6 +123,7 @@ class _MapPageState extends State<MapPage> {
           panel: floatingPanel(
               _photoUrl!, _placeName!, _placeID!, directionButton()),
           collapsed: floatingCollapsed(),
+          defaultPanelState: PanelState.OPEN,
           onPanelSlide: (double position) {
             setState(() {
               _buttonBottomPadding = 84 + (0.8 * position * _sliderMaxHeight);
@@ -141,11 +142,11 @@ class _MapPageState extends State<MapPage> {
           UserAccountsDrawerHeader(
             accountName: const Text(
               'User1',
-              style: TextStyle(color: Colors.black, fontFamily: "Raritas"),
+              style: TextStyle(color: Colors.black, fontFamily: mainFont),
             ),
             accountEmail: Text(userEmail!,
                 style: const TextStyle(
-                    color: Colors.black, fontFamily: "Raritas")),
+                    color: Colors.black, fontFamily: mainFont)),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
@@ -162,7 +163,7 @@ class _MapPageState extends State<MapPage> {
             leading: const Icon(Icons.account_circle_rounded),
             title: const Text(
               'Account',
-              style: TextStyle(fontFamily: 'Raritas'),
+              style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
               navigateToNextScreen(context, const AccountPage());
@@ -172,7 +173,7 @@ class _MapPageState extends State<MapPage> {
             leading: const Icon(Icons.recommend_rounded),
             title: const Text(
               'Recommendation',
-              style: TextStyle(fontFamily: 'Raritas'),
+              style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
               navigateWithData(context, const RecommendationPage());
@@ -182,7 +183,7 @@ class _MapPageState extends State<MapPage> {
             leading: const Icon(Icons.insert_invitation_rounded),
             title: const Text(
               'Invitation',
-              style: TextStyle(fontFamily: 'Raritas'),
+              style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
               navigateWithData(context, const InvitationPage());
@@ -192,7 +193,7 @@ class _MapPageState extends State<MapPage> {
             leading: const Icon(Icons.map_rounded),
             title: const Text(
               'JoubJum',
-              style: TextStyle(fontFamily: 'Raritas'),
+              style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
               navigateWithData(context, const JoubJumPage());
@@ -202,7 +203,7 @@ class _MapPageState extends State<MapPage> {
             leading: const Icon(Icons.people_alt_rounded),
             title: const Text(
               'Friend',
-              style: TextStyle(fontFamily: 'Raritas'),
+              style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
               navigateToNextScreen(context, const FriendPage());
@@ -212,7 +213,7 @@ class _MapPageState extends State<MapPage> {
             leading: const Icon(Icons.logout),
             title: const Text(
               'Sign Out',
-              style: TextStyle(fontFamily: 'Raritas'),
+              style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
               _signOut();
@@ -231,7 +232,7 @@ class _MapPageState extends State<MapPage> {
       title: const Text(
         'Location',
         style:
-            TextStyle(color: Colors.black, fontSize: 25, fontFamily: 'Raritas'),
+            TextStyle(color: Colors.black, fontSize: 25, fontFamily: mainFont),
       ),
       centerTitle: true,
       leading: Builder(builder: (context) {

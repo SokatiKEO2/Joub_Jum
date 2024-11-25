@@ -60,9 +60,9 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                               const Text(
                                 'Created by:',
                                 style: TextStyle(
-                                  color: boxColor,
+                                  color: textForeground,
                                   fontSize: 20,
-                                  fontFamily: "Raritas",
+                                  fontFamily: mainFont,
                                 ),
                               ),
                               const SizedBox(width: 10.0),
@@ -82,9 +82,9 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                               Text(
                                 _invitationDetails['user']!,
                                 style: const TextStyle(
-                                  color: boxColor,
+                                  color: textForeground,
                                   fontSize: 20,
-                                  fontFamily: "Raritas",
+                                  fontFamily: mainFont,
                                 ),
                               ),
                             ],
@@ -96,9 +96,9 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                                 child: Text(
                                   'Location: ${_invitationDetails['location']!}',
                                   style: const TextStyle(
-                                    color: boxColor,
+                                    color: textForeground,
                                     fontSize: 20,
-                                    fontFamily: "Raritas",
+                                    fontFamily: mainFont,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -134,18 +134,18 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                           Text(
                             'Date: ${_invitationDetails['date']!}',
                             style: const TextStyle(
-                              color: boxColor,
+                              color: textForeground,
                               fontSize: 20,
-                              fontFamily: "Raritas",
+                              fontFamily: mainFont,
                             ),
                           ),
                           const Divider(),
                           Text(
                             'Time: ${_invitationDetails['time']!}',
                             style: const TextStyle(
-                              color: boxColor,
+                              color: textForeground,
                               fontSize: 20,
-                              fontFamily: "Raritas",
+                              fontFamily: mainFont,
                             ),
                           ),
                           const Divider(),
@@ -155,9 +155,9 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                               const Text(
                                 'Going:',
                                 style: TextStyle(
-                                  color: boxColor,
+                                  color: textForeground,
                                   fontSize: 20,
-                                  fontFamily: "Raritas",
+                                  fontFamily: mainFont,
                                 ),
                               ),
                               const SizedBox(width: 8.0),
@@ -260,7 +260,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
           style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
-            fontFamily: "Raritas"
+            fontFamily: mainFont
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -272,7 +272,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
     return AppBar(
       title: const Text(
         'Invitation Detail',
-        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
+        style: TextStyle(fontSize: 25, fontFamily: mainFont),
       ),
       backgroundColor: appBarColor,
       elevation: 0.0,

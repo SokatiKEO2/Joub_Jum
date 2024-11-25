@@ -7,12 +7,14 @@ const Color appBarColor = Color(0xbfc49450);
 const Color drawerBottom = Color(0xFFe1d5c9);
 const Color drawerTop = Color(0xFFc49450);
 
-const Color boxColor = Color(0xff262026);
+const Color boxColor = Color(0xFFFAEBD7);
 const Color bodyColor = Color(0xFFf6f6ee);
 
 const Color duskyGreen = Color(0xFF556B2F);
 const Color antiqueColor = Color(0xFFFAEBD7);
 
+const String mainFont = "Raritas";
+const Color textForeground = Colors.black;
 
 
 void navigateToNextScreen(BuildContext context, Widget targetPage) {

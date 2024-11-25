@@ -60,9 +60,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                               const Text(
                                 'Created by:',
                                 style: TextStyle(
-                                  color: boxColor,
+                                  color: textForeground,
                                   fontSize: 20,
-                                  fontFamily: "Raritas",
+                                  fontFamily: mainFont,
                                 ),
                               ),
                               const SizedBox(width: 10.0),
@@ -82,9 +82,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                               Text(
                                 _joubjumDetails['user']!,
                                 style: const TextStyle(
-                                  color: boxColor,
+                                  color: textForeground,
                                   fontSize: 20,
-                                  fontFamily: "Raritas",
+                                  fontFamily: mainFont,
                                 ),
                               ),
                             ],
@@ -96,9 +96,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                                 child: Text(
                                   'Location: ${_joubjumDetails['location']!}',
                                   style: const TextStyle(
-                                    color: boxColor,
+                                    color: textForeground,
                                     fontSize: 20,
-                                    fontFamily: "Raritas",
+                                    fontFamily: mainFont,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -134,18 +134,18 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                           Text(
                             'Date: ${_joubjumDetails['date']!}',
                             style: const TextStyle(
-                              color: boxColor,
+                              color: textForeground,
                               fontSize: 20,
-                              fontFamily: "Raritas",
+                              fontFamily: mainFont,
                             ),
                           ),
                           const Divider(),
                           Text(
                             'Time: ${_joubjumDetails['time']!}',
                             style: const TextStyle(
-                              color: boxColor,
+                              color: textForeground,
                               fontSize: 20,
-                              fontFamily: "Raritas",
+                              fontFamily: mainFont,
                             ),
                           ),
                           const Divider(),
@@ -155,9 +155,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                               const Text(
                                 'Going:',
                                 style: TextStyle(
-                                  color: boxColor,
+                                  color: textForeground,
                                   fontSize: 20,
-                                  fontFamily: "Raritas",
+                                  fontFamily: mainFont,
                                 ),
                               ),
                               const SizedBox(width: 8.0),
@@ -210,7 +210,7 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
-                fontFamily: "Raritas",
+                fontFamily: mainFont,
               ),
             ),
           ),
@@ -239,9 +239,9 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
         Text(
           name,
           style: const TextStyle(
-            color: boxColor,
+            color: textForeground,
             fontSize: 20,
-            fontFamily: "Raritas",
+            fontFamily: mainFont,
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -253,7 +253,7 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
     return AppBar(
       title: const Text(
         'JoubJum Detail',
-        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
+        style: TextStyle(fontSize: 25, fontFamily: mainFont),
       ),
       backgroundColor: appBarColor,
       elevation: 0.0,

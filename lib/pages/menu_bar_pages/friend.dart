@@ -106,7 +106,7 @@ class _FriendPageState extends State<FriendPage> {
     return AppBar(
       title: const Text(
         'Friends',
-        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
+        style: TextStyle(fontSize: 25, fontFamily: mainFont),
       ),
       backgroundColor: appBarColor,
       elevation: 0.0,
@@ -125,7 +125,7 @@ Padding buildHeader(String header) {
     child: Text(
       header,
       style: const TextStyle(
-        fontSize: 25, fontFamily: "Raritas",
+        fontSize: 25, fontFamily: mainFont,
       ),
     ),
   );
@@ -187,9 +187,9 @@ class FriendListPage extends StatelessWidget {
               Text(
                 friend['name']!,
                 style: const TextStyle(
-                  color: bodyColor,
+                  color: textForeground,
                   fontSize: 20,
-                  fontFamily: "Raritas"
+                  fontFamily: mainFont
                 ),
               ),
             ],
@@ -270,9 +270,9 @@ class _RequestPageState extends State<RequestPage> {
                   Text(
                     request['name']!,
                     style: const TextStyle(
-                        color: bodyColor,
+                        color: textForeground,
                         fontSize: 23,
-                        fontFamily: "Raritas"
+                        fontFamily: mainFont
                     ),
                   ),
                   const SizedBox(height: 8.0),
@@ -441,7 +441,12 @@ class _AddFriendPageState extends State<AddFriendPage> {
                     backgroundColor: Colors.grey.shade400,
                   ),
                   child: const Text('Request Sent'),
+
                 ) : ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: appBarColor,
+                    foregroundColor: bodyColor,
+                  ),
                   onPressed: () => _onSendRequest(friend),
                   child: const Text('Send Request'),
                 ),

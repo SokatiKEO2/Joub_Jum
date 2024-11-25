@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/consts.dart';
 import 'package:provider/provider.dart';
 
 import 'Provider.dart';
@@ -154,7 +156,7 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
-                                        fontFamily: "Raritas"
+                                        fontFamily: mainFont
                                       ),
                                     ),
                                     const SizedBox(width: 8.0),
@@ -237,7 +239,7 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
     return AppBar(
       title: const Text(
         'JoubJum Detail',
-        style: TextStyle(fontSize: 25, fontFamily: "Raritas"),
+        style: TextStyle(fontSize: 25, fontFamily: mainFont),
       ),
       backgroundColor: const Color(0xFFC49551),
       elevation: 0.0,

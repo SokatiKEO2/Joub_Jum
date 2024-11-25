@@ -51,7 +51,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
     return AppBar(
       title: const Text(
         'Recommendations',
-        style: TextStyle(fontSize: 25, fontFamily: 'Raritas'),
+        style: TextStyle(fontSize: 25, fontFamily: mainFont),
       ),
       backgroundColor: appBarColor,
       elevation: 0.0,
@@ -68,7 +68,7 @@ class _RecommendationPageState extends State<RecommendationPage> {
       padding: const EdgeInsets.only(left: 15.0),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 30, fontFamily: 'Raritas'),
+        style: const TextStyle(fontSize: 30, fontFamily: mainFont),
       ),
     );
   }
