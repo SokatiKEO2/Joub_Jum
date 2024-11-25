@@ -38,6 +38,11 @@ class _AccountPageState extends State<AccountPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    width: 48,
+                    child: Icon(Icons.verified_user),
+                  ),
+
                   const Text(
                     "Nicki Minaj",
                     style: TextStyle(fontSize: 25, fontFamily: mainFont),

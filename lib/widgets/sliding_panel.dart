@@ -45,7 +45,7 @@ Widget floatingPanel(List photoUrl, String placeName, String placeID, ElevatedBu
             style: const TextStyle(fontSize: 18, fontFamily: 'Raritas'),
           ),
         ),
-        const Divider(height: 8, color: appBarColor),
+        const Divider(height: 6, color: appBarColor),
         const SizedBox(height: 18),
         pictureSlider(photoUrl),
         const DescriptionBox(),

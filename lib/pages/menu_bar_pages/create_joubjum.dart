@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
-import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
 import 'Provider.dart';
 
 class CreateJoubJumPage extends StatefulWidget {
@@ -23,18 +23,78 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
   late String location;
   late String placeId;
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
+  final TextEditingController _textController = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        _textController.text = DateFormat('dd/MM/yy').format(picked);
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      final now = DateTime.now();
+      final selectedTime =
+          DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+      final formattedTime = DateFormat('h:mm a').format(selectedTime);
+      setState(() {
+        _controller.text = formattedTime;
+      });
+    }
+  }
 
   late Map<String, dynamic> setUpJoubJum;
 
   //TODO Friend backends
   final List<Map<String, String>> _allFriends = [
-    {"name": "Channa", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Sokly", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Rathana", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Makara", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Samnang", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Panha", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Sokun", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {
+      "name": "Channa",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Sokly",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Rathana",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Makara",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Samnang",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Panha",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Sokun",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
   ];
 
   @override
@@ -44,12 +104,14 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
     placeId = widget.placeId;
 
     // Initialize the setUpJoubJum map here
+    //TODO BACKEND FOR JOUBJUM
     setUpJoubJum = {
       "user": "Kati",
       "date": "",
       "time": "",
       "location": location,
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
       "placeId": placeId,
       "invitees": <Map<String, String>>[], // Explicit type definition
     };
@@ -60,21 +122,24 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
       _formStateKey.currentState?.save();
 
       // Ensure invitees are in the correct format
-      setUpJoubJum['invitees'] = (setUpJoubJum['invitees'] as List<Map<String, String>>).map((invitee) {
+      setUpJoubJum['invitees'] =
+          (setUpJoubJum['invitees'] as List<Map<String, String>>)
+              .map((invitee) {
         return {
           "name": invitee['name']!,
-          "image": invitee['imagePath']!, // Ensure the key matches invitations
+          "image": invitee['imagePath']!,
+          // Ensure the key matches invitations
         };
       }).toList();
 
       // Create JoubJum
-      Provider.of<InvitationsAndJoubJumsState>(context, listen: false).createJoubJum(setUpJoubJum);
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+          .createJoubJum(setUpJoubJum);
 
       // Navigate back or show a success message
-      Navigator.pop(context);
+      navigateToNextScreen(context, const JoubJumPage());
     }
   }
-
 
   void _addInvitee(Map<String, String> invitee) {
     setState(() {
@@ -128,24 +193,44 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                   readOnly: true,
                                 ),
                                 TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText: 'DD/MM/YY',
-                                    labelText: 'Date',
+                                  controller: _textController,
+                                  decoration: InputDecoration(
+                                    hintText: 'DD/MM/YYYY',
+                                    labelText: 'Select Date',
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons.calendar_today),
+                                      onPressed: () {
+                                        _selectDate(context);
+                                      },
+                                    ),
                                   ),
-                                  validator: (value) => value == null || value.isEmpty
-                                      ? 'Parameter Required'
-                                      : null,
-                                  onSaved: (value) => setUpJoubJum['date'] = value ?? '',
+                                  validator: (value) =>
+                                      value == null || value.isEmpty
+                                          ? 'Parameter Required'
+                                          : null,
+                                  onSaved: (value) =>
+                                      setUpJoubJum['date'] = value ?? '',
+                                  readOnly: true,
                                 ),
                                 TextFormField(
-                                  decoration: const InputDecoration(
+                                  controller: _controller,
+                                  decoration: InputDecoration(
                                     hintText: '9:00 AM',
-                                    labelText: 'Time',
+                                    labelText: 'Select Time',
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons.alarm),
+                                      onPressed: () {
+                                        _selectTime(context);
+                                      },
+                                    ),
                                   ),
-                                  validator: (value) => value == null || value.isEmpty
-                                      ? 'Parameter Required'
-                                      : null,
-                                  onSaved: (value) => setUpJoubJum['time'] = value ?? '',
+                                  validator: (value) =>
+                                      value == null || value.isEmpty
+                                          ? 'Parameter Required'
+                                          : null,
+                                  onSaved: (value) =>
+                                      setUpJoubJum['time'] = value ?? '',
+                                  readOnly: true,
                                 ),
                                 const SizedBox(height: 8),
                                 Row(
@@ -154,10 +239,9 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                     const Text(
                                       'Invitees:',
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                        fontFamily: mainFont
-                                      ),
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                          fontFamily: mainFont),
                                     ),
                                     const SizedBox(width: 8.0),
                                     Expanded(
@@ -166,13 +250,18 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                         spacing: 10.0,
                                         runSpacing: 10.0,
                                         children: [
-                                          ...(setUpJoubJum['invitees'] as List<Map<String, String>>)
+                                          ...(setUpJoubJum['invitees']
+                                                  as List<Map<String, String>>)
                                               .map((invitee) =>
-                                              _buildAvatarName(invitee['name']!, invitee['imagePath']!))
-                                              .toList(),
+                                                  _buildAvatarName(
+                                                      invitee['name']!,
+                                                      invitee['imagePath']!))
+                                              ,
                                           Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               SizedBox(
@@ -180,22 +269,34 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
                                                 height: 30,
                                                 child: ElevatedButton(
                                                   onPressed: () async {
-                                                    final selectedFriend = await Navigator.push(
+                                                    final selectedFriend =
+                                                        await Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (_) => FriendSelectionPage(friends: _allFriends),
+                                                        builder: (_) =>
+                                                            FriendSelectionPage(
+                                                                friends:
+                                                                    _allFriends),
                                                       ),
                                                     );
-                                                    if (selectedFriend != null) {
-                                                      _addInvitee(selectedFriend);
+                                                    if (selectedFriend !=
+                                                        null) {
+                                                      _addInvitee(
+                                                          selectedFriend);
                                                     }
                                                   },
-                                                  style: ElevatedButton.styleFrom(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
                                                     shape: const CircleBorder(),
-                                                    backgroundColor: const Color(0xFFC49551),
+                                                    backgroundColor:
+                                                        const Color(0xFFC49551),
                                                     padding: EdgeInsets.zero,
                                                   ),
-                                                  child: const Icon(Icons.add, size: 15, color: Colors.white,),
+                                                  child: const Icon(
+                                                    Icons.add,
+                                                    size: 15,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -216,12 +317,14 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
               ),
               const SizedBox(height: 15),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  SizedBox(
                     child: ElevatedButton(
                       onPressed: _createJoubJum,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightGreen,
+                        backgroundColor: appBarColor,
+                        foregroundColor: bodyColor,
                       ),
                       child: const Text('Create'),
                     ),
@@ -293,7 +396,9 @@ class _FriendSelectionPageState extends State<FriendSelectionPage> {
   void _updateSearchResults() {
     setState(() {
       _filteredFriends = widget.friends
-          .where((friend) => friend['name']!.toLowerCase().contains(_searchController.text.toLowerCase()))
+          .where((friend) => friend['name']!
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase()))
           .toList();
     });
   }

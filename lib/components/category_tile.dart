@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/models/category_model.dart';
 
 class CategoryTile extends StatelessWidget {
@@ -18,7 +19,7 @@ class CategoryTile extends StatelessWidget {
       child: Container(
         width: 185,
         decoration: BoxDecoration(
-          color: const Color(0xffc8c8c8).withOpacity(0.2),
+          color: boxColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
