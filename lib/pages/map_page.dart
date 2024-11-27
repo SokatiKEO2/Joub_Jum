@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:joub_jum/auth.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:location/location.dart';
 import 'package:joub_jum/pages/search_page.dart';
@@ -14,6 +13,9 @@ import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
 import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:joub_jum/widgets/sliding_panel.dart';
+
+import '../auth.dart';
+import '../widgets/confirmation.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -58,6 +60,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     setState(() {
       _sliderMaxHeight = screenHeight / 2;
     });
@@ -65,7 +68,7 @@ class _MapPageState extends State<MapPage> {
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
       appBar: appBar(),
-      drawer: SizedBox(width: 300, child: buildDrawer()),
+      drawer: SizedBox(width: screenWidth / 1.5, child: buildDrawer()),
       body: _currentP == null
           ? const Center(
               child: Text("Loading..."),
@@ -145,16 +148,13 @@ class _MapPageState extends State<MapPage> {
               style: TextStyle(color: Colors.black, fontFamily: mainFont),
             ),
             accountEmail: Text(userEmail!,
-                style: const TextStyle(
-                    color: Colors.black, fontFamily: mainFont)),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.network(
-                  'https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8=',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
+                style:
+                    const TextStyle(color: Colors.black, fontFamily: mainFont)),
+            currentAccountPicture: const CircleAvatar(
+              child: CircleAvatar(
+                maxRadius: 60,
+                backgroundColor: Colors.black,
+                backgroundImage: NetworkImage("https://en.vogue.me/wp-content/uploads/2022/03/Nicki-Minaj-Barbie-diamond-necklace-Ashna-Mehta.jpg"),
               ),
             ),
             decoration: const BoxDecoration(color: drawerTop),
@@ -216,7 +216,11 @@ class _MapPageState extends State<MapPage> {
               style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
-              _signOut();
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Confirmation(text: "sign out", function: () async {await AuthService().signOut(context: context);});
+                  });
             },
           ),
         ],
@@ -394,7 +398,7 @@ class _MapPageState extends State<MapPage> {
             getPolylinePoints().then((coordinate) {
               generatePolylineFromPoints(coordinate);
             });
-            }
+          }
           _panelController.close();
         },
         style: ElevatedButton.styleFrom(
@@ -408,8 +412,5 @@ class _MapPageState extends State<MapPage> {
     currentLocationMarker = await BitmapDescriptor.asset(
         const ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
         'assets/icons/current_marker.png');
-  }
-  Future<void> _signOut() async {
-    await AuthService().signout(context: context);
   }
 }

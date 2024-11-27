@@ -44,65 +44,63 @@ class _JoubJumPageState extends State<JoubJumPage> {
   }
 
   Widget buildJoubJumCard(Map<String, dynamic> joubjum) {
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
-        child: GestureDetector(
-          onTap: () => _onJoubJumTap(joubjum),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: boxColor,
-            ),
-            padding: const EdgeInsets.all(12.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 25.0,
-                            backgroundColor: Colors.transparent,
-                            child: ClipOval(
-                              child: Image.network(
-                                joubjum['imagePath']!,
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: GestureDetector(
+        onTap: () => _onJoubJumTap(joubjum),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: boxColor,
+          ),
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 25.0,
+                          backgroundColor: Colors.transparent,
+                          child: ClipOval(
+                            child: Image.network(
+                              joubjum['imagePath']!,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                          const SizedBox(width: 8.0,),
-                          Expanded(
-                            child: Text(
-                              'JoubJum with ${joubjum['user']}',
-                              style: TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10.0), // Space between title and details
-                      Text(
-                        'Date & Time: ${joubjum['date']}, ${joubjum['time']}\nLocation: ${joubjum['location']}',
-                        style: const TextStyle(
-                          color: appBarColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
                         ),
+                        const SizedBox(width: 8.0,),
+                        Expanded(
+                          child: Text(
+                            'JoubJum with ${joubjum['user']}',
+                            style: const TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10.0), // Space between title and details
+                    Text(
+                      'Date & Time: ${joubjum['date']}, ${joubjum['time']}\nLocation: ${joubjum['location']}',
+                      style: const TextStyle(
+                        color: appBarColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.black,
-                  size: 24,
-                ),
-              ],
-            ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.black,
+                size: 24,
+              ),
+            ],
           ),
         ),
       ),

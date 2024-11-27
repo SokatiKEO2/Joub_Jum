@@ -35,150 +35,148 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            Flexible(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(23),
-                  color: drawerTop,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: drawerBottom,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        // Adjusts height to fit contents
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                                'Created by:',
-                                style: TextStyle(
-                                  color: textForeground,
-                                  fontSize: 20,
-                                  fontFamily: mainFont,
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(23),
+                color: drawerTop,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: drawerBottom,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      // Adjusts height to fit contents
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'Created by:',
+                              style: TextStyle(
+                                color: textForeground,
+                                fontSize: 20,
+                                fontFamily: mainFont,
+                              ),
+                            ),
+                            const SizedBox(width: 10.0),
+                            CircleAvatar(
+                              radius: 20.0,
+                              backgroundColor: Colors.transparent,
+                              child: ClipOval(
+                                child: Image.network(
+                                  _invitationDetails['imagePath']!,
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              const SizedBox(width: 10.0),
-                              CircleAvatar(
-                                radius: 20.0,
-                                backgroundColor: Colors.transparent,
-                                child: ClipOval(
-                                  child: Image.network(
-                                    _invitationDetails['imagePath']!,
-                                    width: 40,
-                                    height: 40,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                            ),
+                            const SizedBox(width: 10.0),
+                            Text(
+                              _invitationDetails['user']!,
+                              style: const TextStyle(
+                                color: textForeground,
+                                fontSize: 20,
+                                fontFamily: mainFont,
                               ),
-                              const SizedBox(width: 10.0),
-                              Text(
-                                _invitationDetails['user']!,
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Location: ${_invitationDetails['location']!}',
                                 style: const TextStyle(
                                   color: textForeground,
                                   fontSize: 20,
                                   fontFamily: mainFont,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ],
-                          ),
-                          const Divider(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  'Location: ${_invitationDetails['location']!}',
-                                  style: const TextStyle(
-                                    color: textForeground,
-                                    fontSize: 20,
-                                    fontFamily: mainFont,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5.0,
-                              ),
-                              SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    goToPlace(_invitationDetails);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    shape: const CircleBorder(),
-                                    backgroundColor: Colors.white,
-                                  ),
-                                  child: const Text(
-                                    '⚲',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Divider(),
-                          Text(
-                            'Date: ${_invitationDetails['date']!}',
-                            style: const TextStyle(
-                              color: textForeground,
-                              fontSize: 20,
-                              fontFamily: mainFont,
                             ),
-                          ),
-                          const Divider(),
-                          Text(
-                            'Time: ${_invitationDetails['time']!}',
-                            style: const TextStyle(
-                              color: textForeground,
-                              fontSize: 20,
-                              fontFamily: mainFont,
+                            const SizedBox(
+                              width: 5.0,
                             ),
-                          ),
-                          const Divider(),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Going:',
-                                style: TextStyle(
-                                  color: textForeground,
-                                  fontSize: 20,
-                                  fontFamily: mainFont,
+                            SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  goToPlace(_invitationDetails);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                  shape: const CircleBorder(),
+                                  backgroundColor: Colors.white,
+                                ),
+                                child: const Text(
+                                  '⚲',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 8.0),
-                              // Space between "Going:" label and avatars
-                              Expanded(
-                                child: Wrap(
-                                  spacing: 10.0,
-                                  // Space between each avatar-name pair
-                                  runSpacing: 10.0,
-                                  // Space between lines if wrapping occurs
-                                  children: _invitationDetails['invitees']
-                                      .map<Widget>((invitee) =>
-                                          _buildAvatarName(invitee['name'],
-                                              invitee['image']))
-                                      .toList(),
-                                ),
-                              ),
-                            ],
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Text(
+                          'Date: ${_invitationDetails['date']!}',
+                          style: const TextStyle(
+                            color: textForeground,
+                            fontSize: 20,
+                            fontFamily: mainFont,
                           ),
-                        ],
-                      ),
+                        ),
+                        const Divider(),
+                        Text(
+                          'Time: ${_invitationDetails['time']!}',
+                          style: const TextStyle(
+                            color: textForeground,
+                            fontSize: 20,
+                            fontFamily: mainFont,
+                          ),
+                        ),
+                        const Divider(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Going:',
+                              style: TextStyle(
+                                color: textForeground,
+                                fontSize: 20,
+                                fontFamily: mainFont,
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            // Space between "Going:" label and avatars
+                            Expanded(
+                              child: Wrap(
+                                spacing: 10.0,
+                                // Space between each avatar-name pair
+                                runSpacing: 10.0,
+                                // Space between lines if wrapping occurs
+                                children: _invitationDetails['invitees']
+                                    .map<Widget>((invitee) =>
+                                        _buildAvatarName(invitee['name'],
+                                            invitee['image']))
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),

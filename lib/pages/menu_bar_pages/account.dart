@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
+import '../../auth.dart';
+import '../../widgets/confirmation.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({
@@ -16,56 +18,96 @@ class _AccountPageState extends State<AccountPage> {
     return Scaffold(
       backgroundColor: bodyColor,
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                maxRadius: 75,
-                child: ClipOval(
-                  child: Image.network(
-                    'https://media.istockphoto.com/id/2151669184/vector/vector-flat-illustration-in-grayscale-avatar-user-profile-person-icon-gender-neutral.jpg?s=612x612&w=0&k=20&c=UEa7oHoOL30ynvmJzSCIPrwwopJdfqzBs0q69ezQoM8=',
-                    fit: BoxFit.cover,
-                  ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: mainAccountComponents(),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Confirmation(text: "sign out", function: () async {await AuthService().signOut(context: context);});
+                    },
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: appBarColor,
+                  foregroundColor: bodyColor,
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(IconData(0xe3b3, fontFamily: 'MaterialIcons')),
+                    Text(
+                      'Sign Out',
+                      style: TextStyle(fontFamily: mainFont),
+                    ),
+                  ],
                 ),
               ),
-              //TODO USERNAME FROM DATABASE
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 48,
-                    child: Icon(Icons.verified_user),
-                  ),
-
-                  const Text(
-                    "Nicki Minaj",
-                    style: TextStyle(fontSize: 25, fontFamily: mainFont),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      // Add your edit logic here
-                    },)
-                ],
-              ),
-              Divider(),
-              const SizedBox(height: 16),
-              _buildComponentBox('johndoe@example.com', 0xe22a),
-              const SizedBox(height: 8),
-              _buildComponentBox('123-456-7890',0xe4a2),
-              const SizedBox(height: 16),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
+
+  Column mainAccountComponents() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const CircleAvatar(
+          maxRadius: 60,
+          backgroundColor: Colors.black,
+            backgroundImage: NetworkImage("https://en.vogue.me/wp-content/uploads/2022/03/Nicki-Minaj-Barbie-diamond-necklace-Ashna-Mehta.jpg"),
+        ),
+        //TODO USERNAME FROM DATABASE
+        const SizedBox(
+          height: 16,
+        ),
+        buildSignOutButton(),
+        const Divider(),
+        const SizedBox(height: 16),
+        _buildComponentBox('johndoe@example.com', 0xe22a),
+        const SizedBox(height: 8),
+        _buildComponentBox('123-456-7890', 0xe4a2),
+        const SizedBox(height: 16),
+        _buildComponentBox("Password", 0xf00f0),
+      ],
+    );
+  }
+
+  Row buildSignOutButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(
+          width: 48,
+          child: Icon(Icons.verified_user),
+        ),
+        const Text(
+          "Nicki Minaj",
+          style: TextStyle(fontSize: 25, fontFamily: mainFont),
+        ),
+        IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () {
+            // Add your edit logic here
+          },
+        )
+      ],
+    );
+  }
+
   Widget _buildComponentBox(String info, int icon) {
     IconData iconData = IconData(icon, fontFamily: 'MaterialIcons');
     return Padding(
@@ -79,20 +121,24 @@ class _AccountPageState extends State<AccountPage> {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            const SizedBox(width:10,),
+            const SizedBox(
+              width: 10,
+            ),
             Icon(iconData),
-            const SizedBox(width:10,),
+            const SizedBox(
+              width: 10,
+            ),
             Expanded(
               child: Text(
-                '$info',
-                style: TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
+                info,
+                style: const TextStyle(
+                    fontSize: 20, fontFamily: mainFont, color: textForeground),
               ),
             ),
             if (icon != 0xe22a)
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  // Add your edit logic here
                 },
               ),
           ],
@@ -100,7 +146,6 @@ class _AccountPageState extends State<AccountPage> {
       ),
     );
   }
-
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -118,4 +163,3 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 }
-

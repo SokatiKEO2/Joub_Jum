@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:joub_jum/widgets/confirmation.dart';
 
 import '../../consts.dart';
 
@@ -49,7 +50,7 @@ class _FriendPageState extends State<FriendPage> {
   void initState() {
     super.initState();
     _pages = [
-      FriendListPage(friends: _friends, onTapFriend: _showSnackBar),
+      FriendListPage(friends: _friends, unFriend: _unFriend),
       RequestPage(requests: _requests, accept: _acceptRequest, reject: _rejectRequest),
       AddFriendPage(
         allFriends: _allFriends,
@@ -76,12 +77,11 @@ class _FriendPageState extends State<FriendPage> {
     });
   }
 
-  void _showSnackBar(String userName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Tapped on $userName'),
-      ),
-    );
+  void _unFriend(Map<String, String> request) {
+    setState(() {
+      _friends.remove(request);
+      _allFriends.add(request);
+    });
   }
 
   @override
@@ -131,13 +131,17 @@ Padding buildHeader(String header) {
   );
 }
 
-// FriendListPage with updated structure to display friends' images and names
-class FriendListPage extends StatelessWidget {
+class FriendListPage extends StatefulWidget {
   final List<Map<String, String>> friends;
-  final Function(String) onTapFriend;
+  final Function(Map<String, String>) unFriend;
 
-  const FriendListPage({super.key, required this.friends, required this.onTapFriend});
+  const FriendListPage({super.key, required this.friends, required this.unFriend});
 
+  @override
+  State<FriendListPage> createState() => _FriendListPageState();
+}
+
+class _FriendListPageState extends State<FriendListPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -147,9 +151,9 @@ class FriendListPage extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            itemCount: friends.length,
+            itemCount: widget.friends.length,
             itemBuilder: (BuildContext context, int index) {
-              return _buildFriendTile(friends[index]);
+              return _buildFriendTile(widget.friends[index]);
             },
           ),
         ),
@@ -160,31 +164,30 @@ class FriendListPage extends StatelessWidget {
   Widget _buildFriendTile(Map<String, String> friend) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: GestureDetector(
-        onTap: () => onTapFriend(friend['name']!),
-        child: Container(
-          height: 80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            color: boxColor,
-          ),
-          padding: const EdgeInsets.only(left: 12.0, right: 8.0),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 30.0,
-                backgroundColor: Colors.transparent,
-                child: ClipOval(
-                  child: Image.network(
-                    friend['imagePath']!,
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                  ),
+      child: Container(
+        height: 80,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: boxColor,
+        ),
+        padding: const EdgeInsets.only(left: 12.0, right: 8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30.0,
+              backgroundColor: Colors.transparent,
+              child: ClipOval(
+                child: Image.network(
+                  friend['imagePath']!,
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 10.0),
-              Text(
+            ),
+            const SizedBox(width: 10.0),
+            Expanded(
+              child: Text(
                 friend['name']!,
                 style: const TextStyle(
                   color: textForeground,
@@ -192,10 +195,43 @@ class FriendListPage extends StatelessWidget {
                   fontFamily: mainFont
                 ),
               ),
-            ],
-          ),
+            ),
+            _buildUnfriendButton(friend),
+          ],
         ),
       ),
+    );
+  }
+
+  Row _buildUnfriendButton(Map<String, String> friend) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 35,
+          height: 35,
+          child: ElevatedButton(
+            //TODO Confirmation
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Confirmation(text: 'unfriend ${friend['user']}', function: widget.unFriend(friend));
+                  });
+              setState(() {});
+            },
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.zero,
+              shape: const CircleBorder(),
+              backgroundColor: appBarColor,
+            ),
+            child: const Icon(
+              Icons.person_remove_alt_1_rounded,
+              color: boxColor,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

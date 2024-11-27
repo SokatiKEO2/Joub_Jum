@@ -5,7 +5,6 @@ import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/auth_pages/login_screen.dart';
 import 'package:joub_jum/pages/map_page.dart';
 
-
 class AuthService {
   Future<void> signup(
       {required String email,
@@ -61,7 +60,7 @@ class AuthService {
     }
   }
 
-  Future<void> signout({required BuildContext context}) async {
+  Future<void> signOut({required BuildContext context}) async {
     await FirebaseAuth.instance.signOut();
     await Future.delayed(const Duration(seconds: 1));
     Navigator.pushReplacement(context,
