@@ -219,7 +219,7 @@ class _MapPageState extends State<MapPage> {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return Confirmation(text: "sign out", function: () async {await AuthService().signOut(context: context);});
+                    return Confirmation(text: "sign out", button: buildConfirmationButton());
                   });
             },
           ),
@@ -412,5 +412,27 @@ class _MapPageState extends State<MapPage> {
     currentLocationMarker = await BitmapDescriptor.asset(
         const ImageConfiguration(size: Size(20, 20), devicePixelRatio: 2.5),
         'assets/icons/current_marker.png');
+  }
+
+  ElevatedButton buildConfirmationButton() {
+    return ElevatedButton(
+      onPressed: () async {
+        AuthService().signOut(context: context);
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 2.0,
+        backgroundColor: Colors.green,
+      ),
+      child: const Text(
+        'Yes',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
+    );
   }
 }

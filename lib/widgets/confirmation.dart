@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import '../consts.dart';
 
-typedef AsyncCallback = Future<void> Function();
-
 class Confirmation extends StatelessWidget {
   final String text;
-  final AsyncCallback? function;
+  final ElevatedButton button;
 
   const Confirmation({
     super.key,
     required this.text,
-    this.function,
+    required this.button,
   });
 
   @override
@@ -25,25 +23,7 @@ class Confirmation extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ElevatedButton(
-                onPressed: () async {
-                  await function!();
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 2.0,
-                  backgroundColor: Colors.green,
-                ),
-                child: const Text(
-                  'Yes',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              child: button,
             ),
             const SizedBox(
               width: 10,
@@ -74,4 +54,5 @@ class Confirmation extends StatelessWidget {
       ],
     );
   }
+
 }

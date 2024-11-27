@@ -13,23 +13,75 @@ class FriendPage extends StatefulWidget {
 class _FriendPageState extends State<FriendPage> {
   int _selectedIndex = 0;
   final List<Map<String, String>> _friends = [
-    {"name": "Kati", "imagePath": 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'},
-    {"name": "Chamroeun", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Pich", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Kimhak", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Keameng", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Youhorng", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {
+      "name": "Kati",
+      "imagePath":
+          'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
+    },
+    {
+      "name": "Chamroeun",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Pich",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Kimhak",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Keameng",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Youhorng",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
   ];
   final List<Map<String, String>> _requests = [];
 
   final List<Map<String, String>> _allFriends = [
-    {"name": "Channa", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Sokly", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Rathana", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Makara", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Samnang", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Panha", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
-    {"name": "Sokun", "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"},
+    {
+      "name": "Channa",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Sokly",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Rathana",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Makara",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Samnang",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Panha",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
+    {
+      "name": "Sokun",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+    },
   ];
 
   void _onItemTapped(int index) {
@@ -51,7 +103,8 @@ class _FriendPageState extends State<FriendPage> {
     super.initState();
     _pages = [
       FriendListPage(friends: _friends, unFriend: _unFriend),
-      RequestPage(requests: _requests, accept: _acceptRequest, reject: _rejectRequest),
+      RequestPage(
+          requests: _requests, accept: _acceptRequest, reject: _rejectRequest),
       AddFriendPage(
         allFriends: _allFriends,
         requests: _requests,
@@ -68,7 +121,6 @@ class _FriendPageState extends State<FriendPage> {
       // Remove from _allFriends if present
       _allFriends.removeWhere((friend) => friend['name'] == request['name']);
     });
-
   }
 
   void _rejectRequest(Map<String, String> request) {
@@ -92,9 +144,12 @@ class _FriendPageState extends State<FriendPage> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.people_alt_rounded), label: 'Friends'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_add_alt_1_rounded), label: 'Requests'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_search_rounded), label: 'Add Friend'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.people_alt_rounded), label: 'Friends'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_add_alt_1_rounded), label: 'Requests'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person_search_rounded), label: 'Add Friend'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -125,7 +180,8 @@ Padding buildHeader(String header) {
     child: Text(
       header,
       style: const TextStyle(
-        fontSize: 25, fontFamily: mainFont,
+        fontSize: 25,
+        fontFamily: mainFont,
       ),
     ),
   );
@@ -135,7 +191,8 @@ class FriendListPage extends StatefulWidget {
   final List<Map<String, String>> friends;
   final Function(Map<String, String>) unFriend;
 
-  const FriendListPage({super.key, required this.friends, required this.unFriend});
+  const FriendListPage(
+      {super.key, required this.friends, required this.unFriend});
 
   @override
   State<FriendListPage> createState() => _FriendListPageState();
@@ -190,10 +247,7 @@ class _FriendListPageState extends State<FriendListPage> {
               child: Text(
                 friend['name']!,
                 style: const TextStyle(
-                  color: textForeground,
-                  fontSize: 20,
-                  fontFamily: mainFont
-                ),
+                    color: textForeground, fontSize: 20, fontFamily: mainFont),
               ),
             ),
             _buildUnfriendButton(friend),
@@ -216,9 +270,10 @@ class _FriendListPageState extends State<FriendListPage> {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return Confirmation(text: 'unfriend ${friend['user']}', function: widget.unFriend(friend));
+                    return Confirmation(
+                        text: 'unfriend ${friend['user']}',
+                        button: buildConfirmationButton(friend));
                   });
-              setState(() {});
             },
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.zero,
@@ -234,6 +289,31 @@ class _FriendListPageState extends State<FriendListPage> {
       ],
     );
   }
+
+  ElevatedButton buildConfirmationButton(Map<String, String> friend) {
+    return ElevatedButton(
+      onPressed: ()  {
+        widget.unFriend(friend);
+        Navigator.pop(context);
+        setState(() {
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 2.0,
+        backgroundColor: Colors.green,
+      ),
+      child: const Text(
+        'Yes',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
 }
 
 // Updated RequestPage to display requests' images and names
@@ -242,7 +322,11 @@ class RequestPage extends StatefulWidget {
   final Function(Map<String, String>) accept;
   final Function(Map<String, String>) reject;
 
-  const RequestPage({super.key, required this.requests, required this.accept, required this.reject});
+  const RequestPage(
+      {super.key,
+      required this.requests,
+      required this.accept,
+      required this.reject});
 
   @override
   _RequestPageState createState() => _RequestPageState();
@@ -256,18 +340,20 @@ class _RequestPageState extends State<RequestPage> {
       children: [
         buildHeader('Requests List'),
         Expanded(
-          child: widget.requests.isEmpty ? Center(
-            child: Text(
-              'No new requests',
-              style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
-            ),
-          ) : ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            itemCount: widget.requests.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _buildRequestTile(widget.requests[index]);
-            },
-          ),
+          child: widget.requests.isEmpty
+              ? Center(
+                  child: Text(
+                    'No new requests',
+                    style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  itemCount: widget.requests.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildRequestTile(widget.requests[index]);
+                  },
+                ),
         ),
       ],
     );
@@ -308,8 +394,7 @@ class _RequestPageState extends State<RequestPage> {
                     style: const TextStyle(
                         color: textForeground,
                         fontSize: 23,
-                        fontFamily: mainFont
-                    ),
+                        fontFamily: mainFont),
                   ),
                   const SizedBox(height: 8.0),
                   buildButtons(request),
@@ -409,8 +494,8 @@ class _AddFriendPageState extends State<AddFriendPage> {
       if (_isTyping) {
         _searchResults = widget.allFriends
             .where((friend) => friend['name']!
-            .toLowerCase()
-            .contains(_searchController.text.toLowerCase()))
+                .toLowerCase()
+                .contains(_searchController.text.toLowerCase()))
             .toList();
       } else {
         _searchResults = [];
@@ -438,9 +523,8 @@ class _AddFriendPageState extends State<AddFriendPage> {
             controller: _searchController,
             decoration: InputDecoration(
               hintText: 'Search friends...',
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16.0)
-              ),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
               prefixIcon: const Icon(Icons.search),
             ),
             onTap: () {
@@ -451,44 +535,49 @@ class _AddFriendPageState extends State<AddFriendPage> {
           ),
         ),
         Expanded(
-          child: !_isTyping ? Center(
-            child: Text(
-              'Start typing to search friends',
-              style: TextStyle(color: Colors.grey.shade600),
-            ),
-          ) : _searchResults.isEmpty ? Center(
-            child: Text(
-              'No results found',
-              style: TextStyle(color: Colors.grey.shade600),
-            ),
-          ) : ListView.builder(
-            itemCount: _searchResults.length,
-            itemBuilder: (context, index) {
-              final friend = _searchResults[index];
-              final isRequestSent = _isRequestSent(friend['name']!);
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(friend['imagePath']!),
-                ),
-                title: Text(friend['name']!),
-                trailing: isRequestSent ? ElevatedButton(
-                  onPressed: null, // Disable the button
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade400,
+          child: !_isTyping
+              ? Center(
+                  child: Text(
+                    'Start typing to search friends',
+                    style: TextStyle(color: Colors.grey.shade600),
                   ),
-                  child: const Text('Request Sent'),
-
-                ) : ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appBarColor,
-                    foregroundColor: bodyColor,
-                  ),
-                  onPressed: () => _onSendRequest(friend),
-                  child: const Text('Send Request'),
-                ),
-              );
-            },
-          ),
+                )
+              : _searchResults.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No results found',
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: _searchResults.length,
+                      itemBuilder: (context, index) {
+                        final friend = _searchResults[index];
+                        final isRequestSent = _isRequestSent(friend['name']!);
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(friend['imagePath']!),
+                          ),
+                          title: Text(friend['name']!),
+                          trailing: isRequestSent
+                              ? ElevatedButton(
+                                  onPressed: null, // Disable the button
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.grey.shade400,
+                                  ),
+                                  child: const Text('Request Sent'),
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: appBarColor,
+                                    foregroundColor: bodyColor,
+                                  ),
+                                  onPressed: () => _onSendRequest(friend),
+                                  child: const Text('Send Request'),
+                                ),
+                        );
+                      },
+                    ),
         ),
       ],
     );
