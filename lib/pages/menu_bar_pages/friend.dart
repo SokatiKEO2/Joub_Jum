@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/widgets/confirmation.dart';
+import 'package:provider/provider.dart';
 
 import '../../consts.dart';
+import 'Provider.dart';
 
 class FriendPage extends StatefulWidget {
   const FriendPage({super.key});
@@ -12,87 +14,10 @@ class FriendPage extends StatefulWidget {
 
 class _FriendPageState extends State<FriendPage> {
   int _selectedIndex = 0;
-  final List<Map<String, String>> _friends = [
-    {
-      "name": "Kati",
-      "imagePath":
-          'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
-    },
-    {
-      "name": "Chamroeun",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Pich",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Kimhak",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Keameng",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Youhorng",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-  ];
-  final List<Map<String, String>> _requests = [];
-
-  final List<Map<String, String>> _allFriends = [
-    {
-      "name": "Channa",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Sokly",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Rathana",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Makara",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Samnang",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Panha",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-    {
-      "name": "Sokun",
-      "imagePath":
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
-    },
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  void _sendRequest(Map<String, String> friend) {
-    setState(() {
-      _requests.add(friend);
     });
   }
 
@@ -102,38 +27,10 @@ class _FriendPageState extends State<FriendPage> {
   void initState() {
     super.initState();
     _pages = [
-      FriendListPage(friends: _friends, unFriend: _unFriend),
-      RequestPage(
-          requests: _requests, accept: _acceptRequest, reject: _rejectRequest),
-      AddFriendPage(
-        allFriends: _allFriends,
-        requests: _requests,
-        onSendRequest: _sendRequest,
-      ),
+      const FriendListPage(),
+      const RequestPage(),
+      const AddFriendPage(),
     ];
-  }
-
-  void _acceptRequest(Map<String, String> request) {
-    setState(() {
-      _friends.add(request);
-      _requests.remove(request);
-
-      // Remove from _allFriends if present
-      _allFriends.removeWhere((friend) => friend['name'] == request['name']);
-    });
-  }
-
-  void _rejectRequest(Map<String, String> request) {
-    setState(() {
-      _requests.remove(request);
-    });
-  }
-
-  void _unFriend(Map<String, String> request) {
-    setState(() {
-      _friends.remove(request);
-      _allFriends.add(request);
-    });
   }
 
   @override
@@ -188,19 +85,29 @@ Padding buildHeader(String header) {
 }
 
 class FriendListPage extends StatefulWidget {
-  final List<Map<String, String>> friends;
-  final Function(Map<String, String>) unFriend;
-
-  const FriendListPage(
-      {super.key, required this.friends, required this.unFriend});
+  const FriendListPage({super.key});
 
   @override
   State<FriendListPage> createState() => _FriendListPageState();
 }
 
 class _FriendListPageState extends State<FriendListPage> {
+  void unFriend(Map<String, String> friend) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Unfriended ${friend['name']}'),
+      ),
+    );
+    setState(() {
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+          .unFriend(friend);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final allFriendsState = Provider.of<InvitationsAndJoubJumsState>(context);
+    final allFriends = allFriendsState.allFriends;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -208,9 +115,9 @@ class _FriendListPageState extends State<FriendListPage> {
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            itemCount: widget.friends.length,
+            itemCount: allFriends.length,
             itemBuilder: (BuildContext context, int index) {
-              return _buildFriendTile(widget.friends[index]);
+              return _buildFriendTile(allFriends[index]);
             },
           ),
         ),
@@ -271,7 +178,7 @@ class _FriendListPageState extends State<FriendListPage> {
                   context: context,
                   builder: (context) {
                     return Confirmation(
-                        text: 'unfriend ${friend['user']}',
+                        text: 'unfriend ${friend['name']}',
                         button: buildConfirmationButton(friend));
                   });
             },
@@ -292,11 +199,9 @@ class _FriendListPageState extends State<FriendListPage> {
 
   ElevatedButton buildConfirmationButton(Map<String, String> friend) {
     return ElevatedButton(
-      onPressed: ()  {
-        widget.unFriend(friend);
+      onPressed: () {
+        unFriend(friend);
         Navigator.pop(context);
-        setState(() {
-        });
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
@@ -318,29 +223,49 @@ class _FriendListPageState extends State<FriendListPage> {
 
 // Updated RequestPage to display requests' images and names
 class RequestPage extends StatefulWidget {
-  final List<Map<String, String>> requests;
-  final Function(Map<String, String>) accept;
-  final Function(Map<String, String>) reject;
-
-  const RequestPage(
-      {super.key,
-      required this.requests,
-      required this.accept,
-      required this.reject});
+  const RequestPage({
+    super.key,
+  });
 
   @override
   _RequestPageState createState() => _RequestPageState();
 }
 
 class _RequestPageState extends State<RequestPage> {
+  void acceptRequest(Map<String, String> request) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Accepted request from ${request['name']}'),
+      ),
+    );
+    setState(() {
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+          .acceptRequest(request);
+    });
+  }
+
+  void rejectRequest(Map<String, String> request) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Rejected request from ${request['name']}'),
+      ),
+    );
+    setState(() {
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+          .rejectRequest(request);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final requestState = Provider.of<InvitationsAndJoubJumsState>(context);
+    final requests = requestState.requests;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildHeader('Requests List'),
         Expanded(
-          child: widget.requests.isEmpty
+          child: requests.isEmpty
               ? Center(
                   child: Text(
                     'No new requests',
@@ -349,9 +274,9 @@ class _RequestPageState extends State<RequestPage> {
                 )
               : ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  itemCount: widget.requests.length,
+                  itemCount: requests.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _buildRequestTile(widget.requests[index]);
+                    return _buildRequestTile(requests[index]);
                   },
                 ),
         ),
@@ -413,8 +338,7 @@ class _RequestPageState extends State<RequestPage> {
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              widget.accept(request);
-              setState(() {}); // Refresh the UI after accepting
+              acceptRequest(request);
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -436,8 +360,7 @@ class _RequestPageState extends State<RequestPage> {
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              widget.reject(request);
-              setState(() {}); // Refresh the UI after rejecting
+              rejectRequest(request);
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -461,15 +384,8 @@ class _RequestPageState extends State<RequestPage> {
 }
 
 class AddFriendPage extends StatefulWidget {
-  final List<Map<String, String>> allFriends;
-  final List<Map<String, String>> requests;
-  final Function(Map<String, String>) onSendRequest;
-
   const AddFriendPage({
     super.key,
-    required this.allFriends,
-    required this.requests,
-    required this.onSendRequest,
   });
 
   @override
@@ -492,19 +408,35 @@ class _AddFriendPageState extends State<AddFriendPage> {
     setState(() {
       _isTyping = _searchController.text.isNotEmpty;
       if (_isTyping) {
-        _searchResults = widget.allFriends
-            .where((friend) => friend['name']!
-                .toLowerCase()
-                .contains(_searchController.text.toLowerCase()))
-            .toList();
+        _searchResults =
+            Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+                .notFriends
+                .where((friend) => friend['name']!
+                    .toLowerCase()
+                    .contains(_searchController.text.toLowerCase()))
+                .toList();
       } else {
         _searchResults = [];
       }
     });
   }
 
+  void _onSendRequest(Map<String, String> friend) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Request sent to ${friend['name']}')),
+    );
+
+    setState(() {
+      Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+          .sendRequest(friend);
+      _searchController.clear(); // Clear the search bar
+    });
+  }
+
   bool _isRequestSent(String name) {
-    return widget.requests.any((request) => request['name'] == name);
+    return Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+        .requests
+        .any((request) => request['name'] == name);
   }
 
   @override
@@ -581,17 +513,5 @@ class _AddFriendPageState extends State<AddFriendPage> {
         ),
       ],
     );
-  }
-
-  void _onSendRequest(Map<String, String> friend) {
-    widget.onSendRequest(friend);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Request sent to ${friend['name']}')),
-    );
-
-    setState(() {
-      _searchController.clear(); // Clear the search bar
-    });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/menu_bar_pages/create_joubjum.dart';
 
@@ -10,7 +11,7 @@ Widget floatingCollapsed() {
       borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
     ),
-    margin: const EdgeInsets.fromLTRB(24.0, 48.0, 24.0, 0.0),
+    margin: const EdgeInsets.fromLTRB(20.0, 48.0, 20.0, 0),
     child: const Center(
       child: Icon(
         IconData(0xf0532, fontFamily: 'MaterialIcons'),
@@ -21,7 +22,8 @@ Widget floatingCollapsed() {
   );
 }
 
-Widget floatingPanel(List photoUrl, String placeName, String placeID, ElevatedButton directionButton) {
+Widget floatingPanel(List photoUrl, String placeName, String placeID,
+    ElevatedButton directionButton, double rating) {
   return Container(
     decoration: const BoxDecoration(
       color: bodyColor,
@@ -33,7 +35,7 @@ Widget floatingPanel(List photoUrl, String placeName, String placeID, ElevatedBu
         ),
       ],
     ),
-    margin: const EdgeInsets.fromLTRB(24.0, 48.0, 24.0, 24.0),
+    margin: const EdgeInsets.fromLTRB(20.0, 48.0, 20.0, 24.0),
     child: Column(
       children: [
         const SizedBox(height: 8),
@@ -48,10 +50,18 @@ Widget floatingPanel(List photoUrl, String placeName, String placeID, ElevatedBu
         const Divider(height: 6, color: appBarColor),
         const SizedBox(height: 18),
         pictureSlider(photoUrl),
-        const DescriptionBox(),
+        Expanded(
+          child: Row(
+            children: [
+              descriptionBox(rating),
+              Text("Rating: $rating"),
+            ],
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(child: directionButton),
               const SizedBox(width: 10),
@@ -63,25 +73,26 @@ Widget floatingPanel(List photoUrl, String placeName, String placeID, ElevatedBu
               ),
             ],
           ),
-        )
+        ),
       ],
     ),
   );
 }
 
-
-class DescriptionBox extends StatelessWidget {
-  const DescriptionBox({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Expanded(
-      child: Text("data"),
-    );
-  }
-}
+RatingBar descriptionBox(double rating) => RatingBar.builder(
+  initialRating: rating,
+  direction: Axis.horizontal,
+  allowHalfRating: true,
+  itemCount: 5,
+  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+  itemBuilder: (context, _) => const Icon(
+    Icons.star,
+    color: Colors.amber,
+  ),
+  onRatingUpdate: (rating) {
+  },
+  ignoreGestures: true,
+);
 
 class JoubJumButton extends StatelessWidget {
   final String placeName;
@@ -99,8 +110,7 @@ class JoubJumButton extends StatelessWidget {
       ),
       onPressed: () {
         navigateToNextScreen(
-            context, CreateJoubJumPage(location: placeName, placeId: placeID))
-        ;
+            context, CreateJoubJumPage(location: placeName, placeId: placeID));
       },
       child: const Text("+ JoubJum"),
     );

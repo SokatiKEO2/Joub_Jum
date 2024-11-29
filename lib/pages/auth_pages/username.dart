@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/auth_pages/login_screen.dart';
+import 'package:joub_jum/pages/auth_pages/phone_num.dart';
 import 'package:joub_jum/pages/auth_pages/register_screen.dart';
 
 class Username extends StatefulWidget {
@@ -11,8 +12,10 @@ class Username extends StatefulWidget {
 }
 
 class _UsernameState extends State<Username> {
+  final usernameController = TextEditingController();
+
   void _clickedButton() {
-    navigateToNextScreen(context, const RegisterPage());
+    navigateToNextScreen(context, PhoneNum(username: usernameController.text));
   }
 
   @override
@@ -36,9 +39,10 @@ class _UsernameState extends State<Username> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 40, left: 25, right: 25),
-            child: const TextField(
+            child: TextField(
+              controller: usernameController,
               keyboardType: TextInputType.phone, // Phone keyboard
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
                 contentPadding: EdgeInsets.all(13),

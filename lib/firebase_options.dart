@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:278959287596:android:1b0101a1c2716779701089',
     messagingSenderId: '278959287596',
     projectId: 'joubjumauth',
-    storageBucket: 'joubjumauth.appspot.com',
+    storageBucket: 'joubjumauth.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +62,8 @@ class DefaultFirebaseOptions {
     appId: '1:278959287596:ios:5db4e71cc0a55816701089',
     messagingSenderId: '278959287596',
     projectId: 'joubjumauth',
-    storageBucket: 'joubjumauth.appspot.com',
+    storageBucket: 'joubjumauth.firebasestorage.app',
     iosBundleId: 'com.example.joubJum',
   );
+
 }

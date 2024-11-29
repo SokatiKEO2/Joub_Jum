@@ -27,7 +27,7 @@ class _JoubJumPageState extends State<JoubJumPage> {
           Expanded(
             child: joubjums.isEmpty ? Center(
               child: Text(
-                'No new invitations',
+                'No new JoubJums',
                 style: TextStyle(fontSize: 18, color: Colors.grey.shade600),
               ),
             ): ListView.builder(
@@ -77,7 +77,7 @@ class _JoubJumPageState extends State<JoubJumPage> {
                         const SizedBox(width: 8.0,),
                         Expanded(
                           child: Text(
-                            'JoubJum with ${joubjum['user']}',
+                            'JoubJum with ${joubjum['creator']}',
                             style: const TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
                           ),
                         ),
@@ -124,7 +124,7 @@ class _JoubJumPageState extends State<JoubJumPage> {
   void _onRejectPressed(Map<String, dynamic> joubjum) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Cancel JoubJum from ${joubjum['user']}'),
+        content: Text('Cancel JoubJum from ${joubjum['creator']}'),
       ),
     );
     setState(() {

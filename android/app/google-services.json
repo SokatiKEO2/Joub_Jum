@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "278959287596",
     "project_id": "joubjumauth",
-    "storage_bucket": "joubjumauth.appspot.com"
+    "storage_bucket": "joubjumauth.firebasestorage.app"
   },
   "client": [
     {

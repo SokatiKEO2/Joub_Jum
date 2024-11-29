@@ -5,7 +5,9 @@ import 'package:joub_jum/widgets/auth_widgets.dart';
 import 'login_screen.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final String username;
+  final String phonenum;
+  const RegisterPage({super.key, required this.username, required this.phonenum});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -21,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
       password: _passwordController.text,
       context: context,
     );
+    AuthService().addUsernameAndPhoneNum(username: widget.username, phonenum:  widget.phonenum, context: context);
   }
 
   void _registerWithGoogle() {

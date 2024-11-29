@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/auth_pages/login_screen.dart';
+import 'package:joub_jum/pages/auth_pages/register_screen.dart';
 import 'package:joub_jum/pages/auth_pages/username.dart';
 
 class PhoneNum extends StatefulWidget {
-  const PhoneNum({super.key});
+  final String username;
+  const PhoneNum({super.key, required this.username});
+
 
   @override
   State<PhoneNum> createState() => _PhoneNumState();
@@ -18,7 +21,8 @@ class _PhoneNumState extends State<PhoneNum> {
     '+44',
     '+65',
     '+66'
-  ]; // List of country codes
+  ];
+  final phonenumController = TextEditingController();
 
   List<DropdownMenuItem<String>> getDropdownMenuItems() {
     // Create a list of items with the selected value at the top
@@ -35,7 +39,8 @@ class _PhoneNumState extends State<PhoneNum> {
   }
 
   void _clickedButton() {
-    navigateToNextScreen(context, const Username());
+    print(widget.username + phonenumController.text);
+    navigateToNextScreen(context, RegisterPage(username: widget.username, phonenum: phonenumController.text));
   }
 
   @override
@@ -60,6 +65,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 Container(
                   margin: const EdgeInsets.only(top: 40, left: 25, right: 25),
                   child: TextField(
+                    controller: phonenumController,
                     keyboardType: TextInputType.phone, // Phone keyboard
                     decoration: InputDecoration(
                       filled: true,

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
+import 'package:joub_jum/pages/menu_bar_pages/select_friends.dart';
+import 'package:provider/provider.dart';
 import '../../models/fetch_place_data.dart';
+import 'package:joub_jum/pages/menu_bar_pages/create_joubjum.dart';
+
+import 'Provider.dart';
 
 class JoubJumDetailsPage extends StatefulWidget {
   final Map<String, dynamic> joubjumDetails;
@@ -28,6 +33,8 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final allFriendsState = Provider.of<InvitationsAndJoubJumsState>(context);
+    final allFriends = allFriendsState.allFriends;
     return Scaffold(
       backgroundColor: bodyColor,
       appBar: _buildAppBar(),
@@ -79,7 +86,7 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                             ),
                             const SizedBox(width: 10.0),
                             Text(
-                              _joubjumDetails['user']!,
+                              _joubjumDetails['creator']!,
                               style: const TextStyle(
                                 color: textForeground,
                                 fontSize: 20,
@@ -152,6 +159,69 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
+                              'Invitees:',
+                              style: TextStyle(
+                                color: textForeground,
+                                fontSize: 20,
+                                fontFamily: mainFont,
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            // Space between "Going:" label and avatars
+                            Expanded(
+                              child: Wrap(
+                                  spacing: 10.0,
+                                  // Space between each avatar-name pair
+                                  runSpacing: 10.0,
+                                  // Space between lines if wrapping occurs
+                                  children: [
+                                    ..._joubjumDetails['invitees']
+                                        .map<Widget>((invitee) => _buildAvatarName(invitee['name'], invitee['image']))
+                                        .toList(),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              final selectedFriend = await Navigator.push(context,
+                                                MaterialPageRoute(
+                                                  builder: (_) => FriendSelectionPage(currentInvitees: _joubjumDetails['invitees'],),
+                                                ),
+                                              );
+                                              if (selectedFriend != null) {
+                                                Provider.of<InvitationsAndJoubJumsState>(context, listen: false)
+                                                    .addMoreInvitees(_joubjumDetails, selectedFriend);
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              shape: const CircleBorder(),
+                                              backgroundColor: const Color(0xFFC49551),
+                                              padding: EdgeInsets.zero,
+                                            ),
+                                            child: const Icon(
+                                              Icons.add,
+                                              size: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ]
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
                               'Going:',
                               style: TextStyle(
                                 color: textForeground,
@@ -167,10 +237,10 @@ class _JoubJumDetailsPageState extends State<JoubJumDetailsPage> {
                                 // Space between each avatar-name pair
                                 runSpacing: 10.0,
                                 // Space between lines if wrapping occurs
-                                children: _joubjumDetails['invitees']
+                                children: _joubjumDetails['going']
                                     .map<Widget>((invitee) =>
-                                        _buildAvatarName(invitee['name'],
-                                            invitee['image']))
+                                    _buildAvatarName(invitee['name'],
+                                        invitee['image']))
                                     .toList(),
                               ),
                             ),

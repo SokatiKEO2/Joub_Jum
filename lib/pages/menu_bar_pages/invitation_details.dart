@@ -79,7 +79,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                             ),
                             const SizedBox(width: 10.0),
                             Text(
-                              _invitationDetails['user']!,
+                              _invitationDetails['creator']!,
                               style: const TextStyle(
                                 color: textForeground,
                                 fontSize: 20,

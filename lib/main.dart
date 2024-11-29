@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:joub_jum/firebase_options.dart';
-import 'package:joub_jum/pages/auth_pages/register_screen.dart';
+import 'package:joub_jum/pages/auth_pages/username.dart';
 import 'package:joub_jum/pages/map_page.dart';
 import 'package:joub_jum/pages/menu_bar_pages/Provider.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +58,7 @@ class AuthenticationWrapper extends StatelessWidget {
         }
         // If user is not signed in, show the RegisterPage
         else {
-          return const RegisterPage();
+          return const Username();
         }
       },
     );

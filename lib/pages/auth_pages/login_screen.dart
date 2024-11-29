@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/auth.dart';
 import 'package:joub_jum/pages/auth_pages/register_screen.dart';
+import 'package:joub_jum/pages/auth_pages/username.dart';
 import 'package:joub_jum/widgets/auth_widgets.dart';
 
 import '../../consts.dart';
@@ -152,7 +153,7 @@ class dontHaveAccount extends StatelessWidget {
           const Text("Don't have an account? "),
           GestureDetector(
             onTap: () {
-              navigateToNextScreen(context, const RegisterPage());
+              navigateToNextScreen(context, const Username());
             },
             child: const Text(
               "Register",
