@@ -29,7 +29,7 @@ Future<List> fetchPlace(String? placeID) async {
         photos.add(photoData);
       }
     }else{
-      photos.add("https://i.ytimg.com/vi/PTB6NKmwJrM/maxresdefault.jpg");
+      photos.add("https://i0.wp.com/www.bishoprook.com/wp-content/uploads/2021/05/placeholder-image-gray-16x9-1.png?ssl=1");
     }
 
     // Extract location and place name

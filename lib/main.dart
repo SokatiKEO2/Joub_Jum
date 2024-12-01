@@ -13,9 +13,16 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => InvitationsAndJoubJumsState(),
-      child: const MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => InvitationsAndJoubJumsState(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserDataProvider(),
+        ),
+      ],
+      child: MyApp(),
     ),
   );
 }
@@ -54,8 +61,7 @@ class AuthenticationWrapper extends StatelessWidget {
         }
         if (snapshot.hasData) {
           return const MapPage();
-        }
-        else {
+        } else {
           return const Username();
         }
       },

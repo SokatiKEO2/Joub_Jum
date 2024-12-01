@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class InvitationsAndJoubJumsState with ChangeNotifier {
@@ -8,12 +10,14 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
       "date": "03/11/24",
       "time": "6:00 PM",
       "location": "Ambience Bar",
-      "imagePath": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+      "imagePath":
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
       "placeId": "ChIJT17FJIlRCTERKJ2gjPwJf6A",
       "invitees": [
         {
           "name": "Kati",
-          "image": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
+          "image":
+              "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541",
         }
       ]
     },
@@ -22,32 +26,32 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
     {
       "name": "Kati",
       "imagePath":
-      'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
+          'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
     },
     {
       "name": "Chamroeun",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Pich",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Kimhak",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Keameng",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Youhorng",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
   ];
 
@@ -55,37 +59,37 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
     {
       "name": "Channa",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Sokly",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Rathana",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Makara",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Samnang",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Panha",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
     {
       "name": "Sokun",
       "imagePath":
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
+          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"
     },
   ];
 
@@ -102,8 +106,6 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
   List<Map<String, String>> get notFriends => _notFriends;
 
   List<Map<String, String>> get requests => _requests;
-
-
 
   void acceptInvitation(Map<String, dynamic> invitation) {
     _invitations.remove(invitation);
@@ -146,18 +148,19 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
     notifyListeners();
   }
 
-  void createJoubJum(Map<String, dynamic> joubjum){
+  void createJoubJum(Map<String, dynamic> joubjum) {
     _joubJums.add(joubjum);
     _invitations.add(joubjum);
     notifyListeners();
   }
 
-  void deleteJoubJum(Map<String, dynamic> joubjum){
+  void deleteJoubJum(Map<String, dynamic> joubjum) {
     _joubJums.remove(joubjum);
     notifyListeners();
   }
 
-  void addMoreInvitees(Map<String, dynamic> joubjum, Map<String, String> invitee){
+  void addMoreInvitees(
+      Map<String, dynamic> joubjum, Map<String, String> invitee) {
     Map<String, dynamic>? specificJoubJum;
 
     for (var joubJum in _joubJums) {
@@ -177,7 +180,7 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
     notifyListeners();
   }
 
-  void addFriend(Map<String, String> friend){
+  void addFriend(Map<String, String> friend) {
     _allFriends.add(friend);
     notifyListeners();
   }
@@ -203,5 +206,41 @@ class InvitationsAndJoubJumsState with ChangeNotifier {
     _allFriends.remove(friend);
     _notFriends.add(friend);
     notifyListeners();
+  }
+}
+
+class UserDataProvider with ChangeNotifier {
+  String _username = '';
+  String _email = '';
+  String _phonenum = '';
+
+  String get username => _username;
+  String get email => _email;
+  String get phonenum => _phonenum;
+
+  UserDataProvider() {
+    // Fetch user data when the provider is created
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser; // Get the current user
+      if (user != null) {
+        DocumentSnapshot doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (doc.exists) {
+          Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+          _username = userData['username'];
+          _email = userData['email'];
+          _phonenum = userData['phonenum'];
+          notifyListeners(); // Notify listeners to update UI
+        }
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
   }
 }
