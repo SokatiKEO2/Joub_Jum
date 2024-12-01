@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,8 +12,8 @@ import 'package:joub_jum/pages/menu_bar_pages/joub_jum.dart';
 import 'package:joub_jum/pages/menu_bar_pages/recommendation.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:joub_jum/widgets/sliding_panel.dart';
-
 import '../auth.dart';
+import '../models/fetch_user_data.dart';
 import '../widgets/confirmation.dart';
 
 class MapPage extends StatefulWidget {
@@ -28,20 +27,19 @@ class _MapPageState extends State<MapPage> {
   final Location _locationController = Location();
   final PanelController _panelController = PanelController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
   LatLng? _selectedP;
   LatLng? _currentP;
   List? _photoUrl;
-  String? userEmail;
   String? _placeName;
+  String? _placeID;
   double _buttonBottomPadding = 20;
   bool polylineDirection = false;
-  late double _rating;
 
-  String? _placeID;
+  late double _rating;
+  late Map<String, dynamic> userData;
   late double _sliderMaxHeight;
 
   Map<PolylineId, Polyline> polylines = {};
@@ -49,7 +47,6 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void initState() {
-    //TODO setState for Polyline ONLY after they selected a location
     super.initState();
     setCustomMapPin();
     getCurrentUserEmail();
@@ -144,18 +141,20 @@ class _MapPageState extends State<MapPage> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text(
-              'User1',
-              style: TextStyle(color: Colors.black, fontFamily: mainFont),
+            //TODO Make this look pretty
+            accountName: Text(
+              userData['username'],
+              style: const TextStyle(color: Colors.black, fontFamily: mainFont,fontSize: 20),
             ),
-            accountEmail: Text(userEmail!,
+            accountEmail: Text(userData['email'],
                 style:
                     const TextStyle(color: Colors.black, fontFamily: mainFont)),
             currentAccountPicture: const CircleAvatar(
               child: CircleAvatar(
                 maxRadius: 60,
                 backgroundColor: Colors.black,
-                backgroundImage: NetworkImage("https://en.vogue.me/wp-content/uploads/2022/03/Nicki-Minaj-Barbie-diamond-necklace-Ashna-Mehta.jpg"),
+                backgroundImage: NetworkImage(
+                    "https://en.vogue.me/wp-content/uploads/2022/03/Nicki-Minaj-Barbie-diamond-necklace-Ashna-Mehta.jpg"),
               ),
             ),
             decoration: const BoxDecoration(color: drawerTop),
@@ -167,7 +166,13 @@ class _MapPageState extends State<MapPage> {
               style: TextStyle(fontFamily: mainFont),
             ),
             onTap: () {
-              navigateToNextScreen(context, const AccountPage());
+              navigateToNextScreen(
+                  context,
+                  AccountPage(
+                    username: userData['username'],
+                    email: userData['email'],
+                    phonenum: userData['phonenum'],
+                  ));
             },
           ),
           ListTile(
@@ -220,7 +225,8 @@ class _MapPageState extends State<MapPage> {
               showDialog(
                   context: context,
                   builder: (context) {
-                    return Confirmation(text: "sign out", button: buildConfirmationButton());
+                    return Confirmation(
+                        text: "sign out", button: buildConfirmationButton());
                   });
             },
           ),
@@ -303,7 +309,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  //TODO: Change point to _currentP and Selected Location
   Future<List<LatLng>> getPolylinePoints() async {
     List<LatLng> polylineCoordinate = [];
     PolylinePoints polylinePoints = PolylinePoints();
@@ -375,14 +380,11 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-  //TODO add username as well
   Future<void> getCurrentUserEmail() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    final fetchedData = await fetchUserData();
       setState(() {
-        userEmail = user.email;
+        userData = fetchedData!;
       });
-    }
   }
 
   ElevatedButton directionButton() => ElevatedButton(

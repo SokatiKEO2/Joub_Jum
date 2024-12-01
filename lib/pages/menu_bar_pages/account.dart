@@ -4,8 +4,11 @@ import '../../auth.dart';
 import '../../widgets/confirmation.dart';
 
 class AccountPage extends StatefulWidget {
+  final String username;
+  final String phonenum;
+  final String? email;
   const AccountPage({
-    super.key,
+    super.key, required this.username, required this.phonenum, required this.email,
   });
 
   @override
@@ -77,9 +80,9 @@ class _AccountPageState extends State<AccountPage> {
         buildSignOutButton(),
         const Divider(),
         const SizedBox(height: 16),
-        _buildComponentBox('johndoe@example.com', 0xe22a),
+        _buildComponentBox(widget.email!, 0xe22a),
         const SizedBox(height: 8),
-        _buildComponentBox('123-456-7890', 0xe4a2),
+        _buildComponentBox(widget.phonenum, 0xe4a2),
         const SizedBox(height: 16),
         _buildComponentBox("Password", 0xf00f0),
       ],
@@ -91,12 +94,11 @@ class _AccountPageState extends State<AccountPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(
-          width: 48,
-          child: Icon(Icons.verified_user),
+          width: 43,
         ),
-        const Text(
-          "Nicki Minaj",
-          style: TextStyle(fontSize: 25, fontFamily: mainFont),
+        Text(
+          widget.username,
+          style: const TextStyle(fontSize: 25, fontFamily: mainFont),
         ),
         IconButton(
           icon: const Icon(Icons.edit),

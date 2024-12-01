@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/auth_pages/login_screen.dart';
 import 'package:joub_jum/pages/map_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
   Future<void> signup(
@@ -44,19 +43,24 @@ class AuthService {
       await Future.delayed(const Duration(seconds: 1));
       navigateToNextScreen(context, const MapPage());
     } on FirebaseAuthException catch (e) {
-      String message = '';
-      if (e.code == 'invalid-email') {
-        message = 'No user found for that email.';
-      } else if (e.code == 'invalid-credential') {
-        message = 'Wrong password provided for that user.';
+      String message = 'An error occurred';
+      switch (e.code) {
+        case 'invalid-email':
+          message = 'No user found for that email.';
+          break;
+        case 'wrong-password':
+          message = 'Wrong password provided for that user.';
+          break;
+        default:
+          message = e.message ?? message;
       }
       Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.SNACKBAR,
-        backgroundColor: appBarColor,
-        textColor: bodyColor,
-        fontSize: 18.0,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
       );
     }
   }
@@ -68,21 +72,4 @@ class AuthService {
         MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
   }
 
-  //Add user details
-  Future<void> addUsernameAndPhoneNum({
-    required String username,
-    required String phonenum,
-    required BuildContext context,
-  }) async {
-    try {
-      await FirebaseFirestore.instance.collection("users").add({
-        'username': username,
-        'phonenum': phonenum,
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add user details: $e')),
-      );
-    }
-  }
 }

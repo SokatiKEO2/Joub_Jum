@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
-import 'package:joub_jum/pages/auth_pages/login_screen.dart';
 import 'package:joub_jum/pages/auth_pages/phone_num.dart';
-import 'package:joub_jum/pages/auth_pages/register_screen.dart';
+
+import '../../widgets/auth_widgets.dart';
 
 class Username extends StatefulWidget {
   const Username({super.key});
@@ -71,7 +71,8 @@ class _UsernameState extends State<Username> {
               Icons.arrow_forward,
               color: Colors.black,
             ),
-          )
+          ),
+          buildAlreadyHaveAnAccount(context),
         ],
       ),
     );

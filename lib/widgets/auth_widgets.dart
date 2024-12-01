@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../consts.dart';
+import '../pages/auth_pages/login_screen.dart';
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
@@ -159,4 +162,27 @@ class AltAuthRow extends StatelessWidget {
       ],
     );
   }
+}
+Padding buildAlreadyHaveAnAccount(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 20.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Already have an account? "),
+        GestureDetector(
+          onTap: () {
+            navigateToNextScreen(context, const LoginPage());
+          },
+          child: const Text(
+            "Login",
+            style: TextStyle(
+              color: Colors.blue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

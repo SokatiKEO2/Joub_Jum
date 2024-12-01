@@ -52,11 +52,9 @@ class AuthenticationWrapper extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         }
-        // If user is signed in, show the MapPage or main content
         if (snapshot.hasData) {
           return const MapPage();
         }
-        // If user is not signed in, show the RegisterPage
         else {
           return const Username();
         }

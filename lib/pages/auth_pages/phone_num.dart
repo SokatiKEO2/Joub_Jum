@@ -4,6 +4,8 @@ import 'package:joub_jum/pages/auth_pages/login_screen.dart';
 import 'package:joub_jum/pages/auth_pages/register_screen.dart';
 import 'package:joub_jum/pages/auth_pages/username.dart';
 
+import '../../widgets/auth_widgets.dart';
+
 class PhoneNum extends StatefulWidget {
   final String username;
   const PhoneNum({super.key, required this.username});
@@ -39,9 +41,13 @@ class _PhoneNumState extends State<PhoneNum> {
   }
 
   void _clickedButton() {
-    print(widget.username + phonenumController.text);
-    navigateToNextScreen(context, RegisterPage(username: widget.username, phonenum: phonenumController.text));
+    String fullPhoneNumber = selectedValue + phonenumController.text;
+    navigateToNextScreen(
+      context,
+      RegisterPage(username: widget.username, phonenum: fullPhoneNumber),
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,27 +115,7 @@ class _PhoneNumState extends State<PhoneNum> {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      navigateToNextScreen(context, const LoginPage());
-                    },
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            buildAlreadyHaveAnAccount(context),
           ],
         ),
       ),
