@@ -17,7 +17,7 @@ class Confirmation extends StatelessWidget {
       backgroundColor: boxColor,
       title: Text(
         "Are you sure you want to $text?",
-        style: TextStyle(fontFamily: mainFont, fontSize: 20),
+        style: const TextStyle(fontFamily: mainFont, fontSize: 20),
       ),
       actions: [
         Row(

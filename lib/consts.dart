@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 const String GOOGLE_MAP_API_KEY = 'AIzaSyBVMeYfW8X9ZsiHk3gn2MO9Tj_FzFoJtUM';
 const Color appBarColor = Color(0xbfc49450);

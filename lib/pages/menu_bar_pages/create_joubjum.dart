@@ -95,7 +95,7 @@ class _CreateJoubJumPageState extends State<CreateJoubJumPage> {
             .createJoubJum(setUpJoubJum);
 
         Navigator.pop(context);
-        navigateToNextScreen(context, JoubJumPage());
+        navigateToNextScreen(context, const JoubJumPage());
       } catch (e) {
         debugPrint("Error creating JoubJum: $e");
       }

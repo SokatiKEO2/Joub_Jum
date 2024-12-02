@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/auth.dart';
-import 'package:joub_jum/pages/auth_pages/register_screen.dart';
 import 'package:joub_jum/pages/auth_pages/username.dart';
 import 'package:joub_jum/widgets/auth_widgets.dart';
 
@@ -61,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             const ForgotPasswordText(),
             const Divider(),
             const SizedBox(height: 10.0),
-            const dontHaveAccount(),
+            const DontHaveAccount(),
             const SizedBox(height: 15.0),
             const Text(
               'Or Sign-in with',
@@ -130,7 +129,7 @@ class ForgotPasswordText extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        navigateToNextScreen(context, ForgotPasswordPage());
+        navigateToNextScreen(context, const ForgotPasswordPage());
       },
       child: const Text(
         'Forgot password?',
@@ -140,8 +139,8 @@ class ForgotPasswordText extends StatelessWidget {
   }
 }
 
-class dontHaveAccount extends StatelessWidget {
-  const dontHaveAccount({super.key});
+class DontHaveAccount extends StatelessWidget {
+  const DontHaveAccount({super.key});
 
   @override
   Widget build(BuildContext context) {

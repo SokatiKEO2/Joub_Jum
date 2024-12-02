@@ -22,7 +22,7 @@ class _UsernameState extends State<Username> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0x00000000),
+        backgroundColor: bodyColor,
         elevation: 0,
       ),
       extendBodyBehindAppBar: true,

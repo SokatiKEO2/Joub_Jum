@@ -71,7 +71,7 @@ class _InvitationPageState extends State<InvitationPage> {
               Expanded(
                 child: Text(
                   '${invitation['creator']} sent an invite',
-                  style: TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
+                  style: const TextStyle(fontSize: 20, fontFamily: mainFont, color: textForeground),
                 ),
               ),
               buildButtons(invitation),

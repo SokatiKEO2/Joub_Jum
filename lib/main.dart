@@ -22,7 +22,7 @@ Future<void> main() async {
           create: (context) => UserDataProvider(),
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
-import 'package:joub_jum/pages/auth_pages/login_screen.dart';
 import 'package:joub_jum/pages/auth_pages/register_screen.dart';
-import 'package:joub_jum/pages/auth_pages/username.dart';
 
 import '../../widgets/auth_widgets.dart';
 

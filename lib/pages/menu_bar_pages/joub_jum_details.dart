@@ -3,7 +3,6 @@ import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/pages/menu_bar_pages/select_friends.dart';
 import 'package:provider/provider.dart';
 import '../../models/fetch_place_data.dart';
-import 'package:joub_jum/pages/menu_bar_pages/create_joubjum.dart';
 
 import 'Provider.dart';
 

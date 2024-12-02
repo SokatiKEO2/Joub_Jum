@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:joub_jum/consts.dart';
 import 'package:joub_jum/components/location_list_tile.dart';
-import 'package:joub_jum/components/network_util.dart';
+import 'package:joub_jum/utils/network_util.dart';
 import 'package:joub_jum/models/autocomplete_prediction.dart';
 import 'package:joub_jum/models/place_auto_complete_response.dart';
 import 'package:joub_jum/models/fetch_place_data.dart';
