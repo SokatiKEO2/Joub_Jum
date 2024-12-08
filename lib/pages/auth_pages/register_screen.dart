@@ -82,10 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: const CustomAppBar(),
       extendBodyBehindAppBar: true,
       backgroundColor: bodyColor,
-      body: SingleChildScrollView(
-        // Wrap the body in a SingleChildScrollView
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        // Padding for better layout
+      body: SingleChildScrollView( // Wrap the body in a SingleChildScrollView
+        padding: const EdgeInsets.symmetric(horizontal: 25.0), // Padding for better layout
         child: Column(
           children: [
             const SizedBox(height: 100.0),
@@ -94,16 +92,16 @@ class _RegisterPageState extends State<RegisterPage> {
             PasswordContainer(controller: _passwordController),
             const SizedBox(height: 20.0),
             ContinueButton(onPressed: _registerButton),
-            const SizedBox(height: 20.0),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 34.0),
             const Divider(),
             const SizedBox(height: 15.0),
             const AlreadyHaveAccount(),
             const Text(
               'Or Register with',
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 15.0,
+                  color: Colors.black,
+                  fontSize: 23.0,
+                  fontFamily: mainFont
               ),
             ),
             const SizedBox(height: 25),
@@ -135,7 +133,7 @@ class ContinueButton extends StatelessWidget {
       child: const Text(
         'Continue',
         style: TextStyle(
-          fontFamily: "Raritas",
+          fontFamily: mainFont,
           fontSize: 20,
         ),
       ),
@@ -153,7 +151,7 @@ class AlreadyHaveAccount extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Already have an account? "),
+          const Text("Already have an account? ",style: TextStyle(fontFamily: mainFont, fontSize: 18),),
           GestureDetector(
             onTap: () {
               navigateToNextScreen(context, const LoginPage());
@@ -161,8 +159,10 @@ class AlreadyHaveAccount extends StatelessWidget {
             child: const Text(
               "Log in",
               style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: mainFont,
+                  fontSize: 18
               ),
             ),
           ),

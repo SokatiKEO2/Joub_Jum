@@ -165,11 +165,11 @@ class AltAuthRow extends StatelessWidget {
 }
 Padding buildAlreadyHaveAnAccount(BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.only(bottom: 20.0),
+    padding: const EdgeInsets.only(top: 20.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account? "),
+        const Text("Already have an account? ", style: TextStyle(fontFamily: mainFont, fontSize: 18),),
         GestureDetector(
           onTap: () {
             navigateToNextScreen(context, const LoginPage());
@@ -179,6 +179,8 @@ Padding buildAlreadyHaveAnAccount(BuildContext context) {
             style: TextStyle(
               color: Colors.blue,
               fontWeight: FontWeight.bold,
+              fontFamily: mainFont,
+              fontSize: 18,
             ),
           ),
         ),

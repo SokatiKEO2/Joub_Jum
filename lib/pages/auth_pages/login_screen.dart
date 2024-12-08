@@ -56,17 +56,17 @@ class _LoginPageState extends State<LoginPage> {
             PasswordContainer(controller: _passwordController),
             const SizedBox(height: 20.0),
             LoginButton(onPressed: _loginButton),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
             const ForgotPasswordText(),
             const Divider(),
             const SizedBox(height: 10.0),
-            const DontHaveAccount(),
-            const SizedBox(height: 15.0),
+            const dontHaveAccount(),
             const Text(
               'Or Sign-in with',
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 15.0,
+                  color: Colors.black,
+                  fontSize: 23.0,
+                  fontFamily: mainFont
               ),
             ),
             const SizedBox(height: 25),
@@ -90,9 +90,10 @@ class LoginText extends StatelessWidget {
     return const Text(
       'Login',
       style: TextStyle(
-        color: Colors.black,
-        fontSize: 30,
-        fontFamily: "Raritas",
+          color: Colors.black,
+          fontSize: 30,
+          fontWeight: FontWeight.w600,
+          fontFamily: mainFont
       ),
     );
   }
@@ -108,8 +109,8 @@ class LoginButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: appBarColor,
-        foregroundColor: bodyColor
+          backgroundColor: appBarColor,
+          foregroundColor: bodyColor
       ),
       child: const Text(
         'Login',
@@ -129,18 +130,18 @@ class ForgotPasswordText extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        navigateToNextScreen(context, const ForgotPasswordPage());
+        navigateToNextScreen(context, ForgotPasswordPage());
       },
       child: const Text(
         'Forgot password?',
-        style: TextStyle(color: Colors.blue),
+        style: TextStyle(color: Colors.blue, fontFamily: mainFont, fontSize: 18),
       ),
     );
   }
 }
 
-class DontHaveAccount extends StatelessWidget {
-  const DontHaveAccount({super.key});
+class dontHaveAccount extends StatelessWidget {
+  const dontHaveAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +150,7 @@ class DontHaveAccount extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Don't have an account? "),
+          const Text("Don't have an account? ", style: TextStyle(fontFamily: mainFont, fontSize: 18),),
           GestureDetector(
             onTap: () {
               navigateToNextScreen(context, const Username());
@@ -157,8 +158,10 @@ class DontHaveAccount extends StatelessWidget {
             child: const Text(
               "Register",
               style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: mainFont,
+                  fontSize: 18
               ),
             ),
           ),

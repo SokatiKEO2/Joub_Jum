@@ -99,7 +99,7 @@ class _AccountPageState extends State<AccountPage> {
                     maxRadius: 60,
                     backgroundColor: Colors.black,
                     backgroundImage: NetworkImage(
-                        "https://en.vogue.me/wp-content/uploads/2022/03/Nicki-Minaj-Barbie-diamond-necklace-Ashna-Mehta.jpg"),
+                        "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541"),
                   ),
             Positioned(
               bottom: -10,
